@@ -301,7 +301,7 @@ export function AnalysisResults({
         </AnalysisSection>
 
         {/* Failure Modes */}
-        <AnalysisSection title="Failure Modes" accentColor="red">
+        <AnalysisSection title="N — Name" subtitle="The failure mode and its mechanism (If X → then Y → producing Z)" accentColor="red">
           <div className="space-y-4">
             {failureModes.map((mode, i) => (
               <FailureModeItem 
