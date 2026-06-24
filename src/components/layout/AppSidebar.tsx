@@ -23,7 +23,9 @@ import {
   Image,
   FileUp,
   StickyNote,
-  Radar
+  Radar,
+  ShieldCheck,
+  List
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -98,6 +100,15 @@ const getNavItems = (userType: string): NavItem[] => {
           { label: "Post-Mortem", href: "/post-mortem", icon: <Search className="w-4 h-4" />, feature: "post_mortem", showUsage: true },
           { label: "SWOT", href: "/frameworks/swot/new", icon: <BarChart3 className="w-4 h-4" />, feature: "framework" },
           { label: "Porter's 5 Forces", href: "/frameworks/porter/new", icon: <Target className="w-4 h-4" />, feature: "framework" },
+        ]
+      },
+      {
+        label: "SNAG",
+        href: "/analyze",
+        icon: <ShieldCheck className="w-4 h-4" />,
+        children: [
+          { label: "Decision Gate", href: "/analyze", icon: <ShieldCheck className="w-4 h-4" />, feature: "deep_snag" },
+          { label: "Gate Registry", href: "/analyze/gates", icon: <List className="w-4 h-4" /> },
         ]
       },
       { label: "Reports", href: "/reports", icon: <FileText className="w-4 h-4" /> },
