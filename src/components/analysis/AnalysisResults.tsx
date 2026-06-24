@@ -346,7 +346,7 @@ export function AnalysisResults({
         </AnalysisSection>
 
         {/* Kill Criteria */}
-        <AnalysisSection title="Kill Criteria" accentColor="gray">
+        <AnalysisSection title="G — Gate" subtitle="The kill criterion — written before commitment, does not move without re-examination" accentColor="gray">
           <ol className="space-y-3">
             {killCriteria.map((criteria, i) => (
               <li key={i} className="border-b border-[#F0F0F0] pb-3 last:border-b-0 last:pb-0">
