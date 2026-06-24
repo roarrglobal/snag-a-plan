@@ -23,6 +23,7 @@ import { TrialBadge } from "@/components/softlaunch/TrialBadge";
 import { UsageCounter } from "@/components/softlaunch/UsageCounter";
 import { DashboardPatterns } from "@/components/dashboard/DashboardPatterns";
 import { DashboardPendingOutcomes } from "@/components/dashboard/DashboardPendingOutcomes";
+import { ActiveGatesWidget } from "@/components/dashboard/ActiveGatesWidget";
 import type { Json } from "@/integrations/supabase/types";
 
 interface SavedAnalysis {
@@ -234,6 +235,9 @@ export function BusinessDashboard({ displayName, greeting, softLaunch }: Busines
           </div>
         </section>
       )}
+
+      {/* Active Gates */}
+      <ActiveGatesWidget />
 
       {/* Pending Outcomes */}
       <DashboardPendingOutcomes />

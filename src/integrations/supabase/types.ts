@@ -19,10 +19,15 @@ export type Database = {
           bottom_line: Json | null
           category: string | null
           created_at: string
+          gate_status: string
           id: string
           original_input: string
+          owner_name: string | null
           result: Json
+          signal_due_date: string | null
           source_file_url: string | null
+          source_module: string | null
+          source_session_id: string | null
           source_type: string | null
           title: string | null
           updated_at: string | null
@@ -32,10 +37,15 @@ export type Database = {
           bottom_line?: Json | null
           category?: string | null
           created_at?: string
+          gate_status?: string
           id?: string
           original_input: string
+          owner_name?: string | null
           result: Json
+          signal_due_date?: string | null
           source_file_url?: string | null
+          source_module?: string | null
+          source_session_id?: string | null
           source_type?: string | null
           title?: string | null
           updated_at?: string | null
@@ -45,10 +55,15 @@ export type Database = {
           bottom_line?: Json | null
           category?: string | null
           created_at?: string
+          gate_status?: string
           id?: string
           original_input?: string
+          owner_name?: string | null
           result?: Json
+          signal_due_date?: string | null
           source_file_url?: string | null
+          source_module?: string | null
+          source_session_id?: string | null
           source_type?: string | null
           title?: string | null
           updated_at?: string | null
