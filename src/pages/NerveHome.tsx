@@ -8,7 +8,229 @@ import {
   Menu,
   X,
   Linkedin,
+  Activity,
+  ScanLine,
+  Search,
+  ShieldCheck,
 } from "lucide-react";
+
+const MODULES = {
+  PULSE: {
+    name: "PULSE",
+    primary: "#0D9488",
+    lightBg: "#F0FDFA",
+    borderDefault: "rgba(13,148,136,0.2)",
+    borderHover: "rgba(13,148,136,0.7)",
+    tagBg: "rgba(13,148,136,0.08)",
+  },
+  SCAN: {
+    name: "SCAN",
+    primary: "#0047AB",
+    lightBg: "#EFF6FF",
+    borderDefault: "rgba(0,71,171,0.2)",
+    borderHover: "rgba(0,71,171,0.7)",
+    tagBg: "rgba(0,71,171,0.08)",
+  },
+  ZERO: {
+    name: "ZERO",
+    primary: "#D97706",
+    lightBg: "#FFFBEB",
+    borderDefault: "rgba(217,119,6,0.2)",
+    borderHover: "rgba(217,119,6,0.7)",
+    tagBg: "rgba(217,119,6,0.08)",
+  },
+  SNAG: {
+    name: "SNAG",
+    primary: "#BE3455",
+    lightBg: "#FFF1F2",
+    borderDefault: "rgba(190,52,85,0.2)",
+    borderHover: "rgba(190,52,85,0.7)",
+    tagBg: "rgba(190,52,85,0.08)",
+  },
+} as const;
+
+type ModuleKey = keyof typeof MODULES;
+
+function FlowLine({ onDark = false }: { onDark?: boolean }) {
+  const sequence: ModuleKey[] = ["PULSE", "SCAN", "ZERO", "SNAG", "PULSE"];
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        alignItems: "center",
+        justifyContent: onDark ? "flex-start" : "center",
+        gap: 0,
+        rowGap: 8,
+      }}
+    >
+      {sequence.map((key, i) => {
+        const m = MODULES[key];
+        return (
+          <span key={i} style={{ display: "inline-flex", alignItems: "center" }}>
+            <span
+              style={{
+                background: m.primary,
+                color: "#FFFFFF",
+                fontWeight: 600,
+                fontSize: 10,
+                letterSpacing: "0.08em",
+                padding: "3px 8px",
+                borderRadius: 980,
+              }}
+            >
+              {m.name}
+            </span>
+            {i < sequence.length - 1 && (
+              <span
+                style={{
+                  margin: "0 6px",
+                  fontSize: 12,
+                  color: onDark ? "rgba(255,255,255,0.3)" : "#9CA3AF",
+                }}
+              >
+                →
+              </span>
+            )}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
+function ColoredModuleCard({
+  moduleKey,
+  Icon,
+  tier,
+  headline,
+  body,
+  cta,
+  tag,
+  onClick,
+}: {
+  moduleKey: ModuleKey;
+  Icon: React.ComponentType<{ size?: number; color?: string; strokeWidth?: number }>;
+  tier: string;
+  headline: string;
+  body: string;
+  cta: string;
+  tag: string;
+  onClick: () => void;
+}) {
+  const m = MODULES[moduleKey];
+  const [hover, setHover] = useState(false);
+  const [ctaHover, setCtaHover] = useState(false);
+  return (
+    <div
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        background: hover ? m.lightBg : "#FFFFFF",
+        border: `1px solid ${hover ? m.borderHover : m.borderDefault}`,
+        borderRadius: 16,
+        padding: 40,
+        transition: "all 0.3s ease",
+        transform: hover ? "translateY(-4px)" : "translateY(0)",
+        boxShadow: hover ? "0 12px 40px rgba(0,0,0,0.08)" : "none",
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div
+          style={{
+            background: m.tagBg,
+            padding: 8,
+            borderRadius: 8,
+            display: "inline-flex",
+          }}
+        >
+          <Icon size={28} color={m.primary} strokeWidth={1.75} />
+        </div>
+        <span
+          style={{
+            background: m.primary,
+            color: "#FFFFFF",
+            fontWeight: 600,
+            fontSize: 11,
+            letterSpacing: "0.08em",
+            padding: "4px 12px",
+            borderRadius: 980,
+          }}
+        >
+          {m.name}
+        </span>
+      </div>
+      <div style={{ marginTop: 8, fontSize: 13, color: "#6B7280" }}>{tier}</div>
+      <h3
+        style={{
+          marginTop: 28,
+          fontFamily: "Inter, sans-serif",
+          fontWeight: 500,
+          fontSize: 22,
+          color: "#0A1628",
+          lineHeight: 1.3,
+        }}
+      >
+        {headline}
+      </h3>
+      <p
+        style={{
+          marginTop: 14,
+          fontSize: 16,
+          color: "#6B7280",
+          lineHeight: 1.65,
+          flex: 1,
+        }}
+      >
+        {body}
+      </p>
+      <div
+        style={{
+          marginTop: 28,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 16,
+        }}
+      >
+        <button
+          onClick={onClick}
+          onMouseEnter={() => setCtaHover(true)}
+          onMouseLeave={() => setCtaHover(false)}
+          style={{
+            background: "none",
+            border: "none",
+            padding: 0,
+            cursor: "pointer",
+            fontFamily: "Inter, sans-serif",
+            fontWeight: 500,
+            fontSize: 15,
+            color: m.primary,
+            textDecoration: ctaHover ? "underline" : "none",
+            textAlign: "left",
+          }}
+        >
+          {cta} →
+        </button>
+        <span
+          style={{
+            fontSize: 13,
+            color: m.primary,
+            background: m.tagBg,
+            padding: "4px 10px",
+            borderRadius: 980,
+            whiteSpace: "nowrap",
+          }}
+        >
+          {tag}
+        </span>
+      </div>
+    </div>
+  );
+}
 
 const NAVY = "#0A1628";
 const COBALT = "#0047AB";
