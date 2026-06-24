@@ -50,6 +50,7 @@ export default function GateRegistry() {
   const [gates, setGates] = useState<Gate[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | GateStatus>("all");
+  const [query, setQuery] = useState("");
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [ownerEdit, setOwnerEdit] = useState<Record<string, string>>({});
 
