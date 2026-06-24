@@ -1,57 +1,93 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { NerveShell } from "@/scan/NerveShell";
+import { Link } from "react-router-dom";
 
 export default function ScanGate() {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!/.+@.+\..+/.test(email)) return;
-    localStorage.setItem("nerve_scan_email", email);
-    sessionStorage.setItem("nerve_scan_guest", "true");
-    navigate("/scan/inputs");
-  };
-
   return (
-    <NerveShell>
-      <main className="max-w-xl mx-auto px-6 py-20">
-        <h1 style={{ fontWeight: 600, fontSize: 36, lineHeight: 1.15, letterSpacing: "-0.02em" }}>
-          Run your Revenue Structure Diagnostic
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#FFFFFF",
+        fontFamily: "Inter, sans-serif",
+        color: "#0A1628",
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+      <div style={{ maxWidth: 640, padding: "120px 32px", width: "100%" }}>
+        <span
+          style={{
+            display: "inline-block",
+            background: "#0047AB",
+            color: "white",
+            fontWeight: 600,
+            fontSize: 11,
+            letterSpacing: "0.08em",
+            padding: "4px 12px",
+            borderRadius: 980,
+            marginBottom: 32,
+          }}
+        >
+          SCAN
+        </span>
+        <h1
+          style={{
+            fontWeight: 300,
+            fontSize: 48,
+            lineHeight: 1.1,
+            letterSpacing: "-0.03em",
+            color: "#0A1628",
+            margin: 0,
+          }}
+        >
+          Find the break in your revenue system.
         </h1>
-        <p style={{ color: "rgba(255,255,255,0.7)", marginTop: 16, fontSize: 16 }}>
-          Eight pillars. One binding constraint. Twenty minutes.
+        <p
+          style={{
+            fontWeight: 400,
+            fontSize: 18,
+            color: "#6B7280",
+            maxWidth: 480,
+            marginTop: 24,
+            lineHeight: 1.55,
+          }}
+        >
+          Scan runs an eight-pillar diagnostic of your revenue structure. It identifies the single
+          binding constraint costing you the most — with a financial impact estimate attached.
         </p>
-        <div style={{ height: 1, background: "rgba(0,71,171,0.2)", margin: "32px 0" }} />
-        <form onSubmit={submit} className="space-y-4">
-          <input
-            type="email"
-            placeholder="your@email.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="w-full px-4 py-3 rounded-md outline-none"
+
+        <div style={{ display: "flex", gap: 12, marginTop: 40, flexWrap: "wrap" }}>
+          <Link
+            to="/signup?module=scan"
+            style={{
+              background: "#0047AB",
+              color: "white",
+              fontWeight: 500,
+              fontSize: 15,
+              padding: "12px 24px",
+              borderRadius: 980,
+            }}
+          >
+            Create free account →
+          </Link>
+          <Link
+            to="/login?redirect=/scan"
             style={{
               background: "transparent",
-              border: "1px solid rgba(0,71,171,0.6)",
-              color: "white",
-              fontSize: 16,
+              color: "#0047AB",
+              fontWeight: 500,
+              fontSize: 15,
+              padding: "12px 24px",
+              borderRadius: 980,
+              border: "1px solid rgba(0,71,171,0.3)",
             }}
-          />
-          <button
-            type="submit"
-            className="w-full py-3 rounded-md transition-opacity hover:opacity-90"
-            style={{ background: "#0047AB", color: "white", fontWeight: 500, fontSize: 16 }}
           >
-            Start Diagnostic →
-          </button>
-        </form>
-        <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, marginTop: 20 }}>
-          Already have an account?{" "}
-          <Link to="/login" style={{ color: "#0047AB" }}>Sign in →</Link>
+            Sign in
+          </Link>
+        </div>
+
+        <p style={{ fontWeight: 400, fontSize: 14, color: "#6B7280", marginTop: 24 }}>
+          No CRM connection required. Results saved to your account.
         </p>
-      </main>
-    </NerveShell>
+      </div>
+    </div>
   );
 }
