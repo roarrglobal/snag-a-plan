@@ -1,7 +1,14 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import type { Json } from "@/integrations/supabase/types";
+import {
+  fetchNerveProfile,
+  fetchModuleAccess,
+  type NerveUserProfile,
+  type NerveModuleAccess,
+  type NerveModule,
+} from "@/lib/nerveAccess";
 
 export interface Profile {
   id: string;
@@ -25,7 +32,6 @@ export interface Profile {
   lifetime_deep_snags_used: number | null;
   lifetime_post_mortems_used: number | null;
   lifetime_frameworks_used: number | null;
-  // Soft launch fields
   trial_start_date: string | null;
   trial_expired: boolean | null;
   deep_snags_used: number | null;
@@ -33,9 +39,7 @@ export interface Profile {
   waitlist_joined: boolean | null;
   waitlist_joined_at: string | null;
   discount_code: string | null;
-  // User type
   user_type: string | null;
-  // Extended profile fields
   date_of_birth: string | null;
   birth_time: string | null;
   birth_place: string | null;
@@ -49,14 +53,27 @@ export interface Profile {
   profile_completed: boolean | null;
 }
 
-export type ProfileUpdates = Partial<Omit<Profile, 'id' | 'user_id' | 'preferences'>>;
+export type ProfileUpdates = Partial<Omit<Profile, "id" | "user_id" | "preferences">>;
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   profile: Profile | null;
+  // Nerve unified access
+  nerveProfile: NerveUserProfile | null;
+  moduleAccess: NerveModuleAccess[];
+  isAdmin: boolean;
+  hasModuleAccess: (module: NerveModule) => boolean;
+  moduleStatus: (module: NerveModule) => NerveModuleAccess["status"] | null;
+  refreshNerveAccess: () => Promise<void>;
   isLoading: boolean;
-  signUp: (email: string, password: string, displayName?: string, userType?: string, teamName?: string) => Promise<{ error: Error | null }>;
+  signUp: (
+    email: string,
+    password: string,
+    displayName?: string,
+    userType?: string,
+    teamName?: string
+  ) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   updateProfile: (updates: ProfileUpdates) => Promise<{ error: Error | null }>;
@@ -69,6 +86,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [nerveProfile, setNerveProfile] = useState<NerveUserProfile | null>(null);
+  const [moduleAccess, setModuleAccess] = useState<NerveModuleAccess[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchProfile = async (userId: string): Promise<Profile | null> => {
@@ -77,13 +96,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .select("*")
       .eq("user_id", userId)
       .maybeSingle();
-
     if (error) {
       console.error("Error fetching profile:", error);
       return null;
     }
     return data;
   };
+
+  const loadNerve = useCallback(async (userId: string) => {
+    const [np, ma] = await Promise.all([fetchNerveProfile(userId), fetchModuleAccess(userId)]);
+    setNerveProfile(np);
+    setModuleAccess(ma);
+  }, []);
+
+  const refreshNerveAccess = useCallback(async () => {
+    if (user) await loadNerve(user.id);
+  }, [user, loadNerve]);
 
   const refreshProfile = async () => {
     if (user) {
@@ -93,42 +121,47 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    // Set up auth state listener BEFORE checking session
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
 
-        if (session?.user) {
-          // Defer profile fetch to avoid blocking
-          setTimeout(async () => {
-            const profileData = await fetchProfile(session.user.id);
-            setProfile(profileData);
-          }, 0);
-        } else {
-          setProfile(null);
-        }
-
-        setIsLoading(false);
+      if (session?.user) {
+        setTimeout(async () => {
+          const profileData = await fetchProfile(session.user.id);
+          setProfile(profileData);
+          loadNerve(session.user.id);
+        }, 0);
+      } else {
+        setProfile(null);
+        setNerveProfile(null);
+        setModuleAccess([]);
       }
-    );
 
-    // Check initial session
+      setIsLoading(false);
+    });
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
 
       if (session?.user) {
         fetchProfile(session.user.id).then(setProfile);
+        loadNerve(session.user.id);
       }
 
       setIsLoading(false);
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [loadNerve]);
 
-  const signUp = async (email: string, password: string, displayName?: string, userType?: string, teamName?: string) => {
+  const signUp = async (
+    email: string,
+    password: string,
+    displayName?: string,
+    userType?: string,
+    teamName?: string
+  ) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -136,19 +169,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         emailRedirectTo: window.location.origin,
         data: {
           display_name: displayName,
-          user_type: userType || 'individual',
-          pending_team_name: userType === 'business' ? teamName : undefined,
+          full_name: displayName,
+          company_name: teamName,
+          user_type: userType || "individual",
+          pending_team_name: userType === "business" ? teamName : undefined,
         },
       },
     });
 
-    // If signup was successful and we have a user, update their profile with user_type
     if (!error && data.user) {
-      // Wait a moment for the profile to be created by the trigger, then update
       setTimeout(async () => {
         await supabase
           .from("profiles")
-          .update({ user_type: userType || 'individual' })
+          .update({ user_type: userType || "individual" })
           .eq("user_id", data.user!.id);
       }, 500);
     }
@@ -157,11 +190,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
     return { error };
   };
 
@@ -170,22 +199,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
     setSession(null);
     setProfile(null);
+    setNerveProfile(null);
+    setModuleAccess([]);
   };
 
   const updateProfile = async (updates: ProfileUpdates) => {
     if (!user) return { error: new Error("Not authenticated") };
-
-    const { error } = await supabase
-      .from("profiles")
-      .update(updates)
-      .eq("user_id", user.id);
-
-    if (!error) {
-      setProfile((prev) => (prev ? { ...prev, ...updates } : null));
-    }
-
+    const { error } = await supabase.from("profiles").update(updates).eq("user_id", user.id);
+    if (!error) setProfile((prev) => (prev ? { ...prev, ...updates } : null));
     return { error };
   };
+
+  const hasModuleAccess = (module: NerveModule) =>
+    moduleAccess.some((m) => m.module === module && (m.status === "active" || m.status === "trial"));
+
+  const moduleStatus = (module: NerveModule) =>
+    moduleAccess.find((m) => m.module === module)?.status ?? null;
 
   return (
     <AuthContext.Provider
@@ -193,6 +222,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         session,
         profile,
+        nerveProfile,
+        moduleAccess,
+        isAdmin: !!nerveProfile?.is_admin,
+        hasModuleAccess,
+        moduleStatus,
+        refreshNerveAccess,
         isLoading,
         signUp,
         signIn,
