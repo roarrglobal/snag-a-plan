@@ -26,7 +26,8 @@ import {
   Radar,
   ShieldCheck,
   List,
-  CircleDashed
+  CircleDashed,
+  ScanLine
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -75,7 +76,15 @@ const getQuickActions = (userType: string) => {
 const getNavItems = (userType: string): NavItem[] => {
   const common: NavItem[] = [
     { label: "Dashboard", href: "/dashboard", icon: <Home className="w-4 h-4" /> },
-    { label: "Scan", href: "/scan", icon: <Radar className="w-4 h-4" /> },
+    {
+      label: "Scan",
+      href: "/scan",
+      icon: <ScanLine className="w-4 h-4" />,
+      children: [
+        { label: "New Scan", href: "/scan/new", icon: <Plus className="w-4 h-4" /> },
+        { label: "Reports", href: "/scan/reports", icon: <BarChart3 className="w-4 h-4" /> },
+      ],
+    },
     { label: "ZERO", href: "/zero", icon: <CircleDashed className="w-4 h-4" /> },
   ];
 
