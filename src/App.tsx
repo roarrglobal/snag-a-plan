@@ -91,6 +91,13 @@ import PulseDashboard from "./pages/pulse/PulseDashboard";
 import Onboarding from "./pages/Onboarding";
 import Pending from "./pages/Pending";
 import { ModuleAccessGuard } from "./components/ModuleAccessGuard";
+import AdminGuard from "./components/AdminGuard";
+import AdminLayout from "./pages/admin/AdminLayout";
+import AdminOverview from "./pages/admin/AdminOverview";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminAccessRequests from "./pages/admin/AdminAccessRequests";
+import AdminIntakes from "./pages/admin/AdminIntakes";
+import AdminModules from "./pages/admin/AdminModules";
 
 const queryClient = new QueryClient();
 
@@ -202,6 +209,22 @@ const App = () => {
                 <Route path="analytics" element={<TeamAnalyticsPage />} />
                 <Route path="admin" element={<TeamAdminPage />} />
                 <Route path="audit-log" element={<TeamAuditLogPage />} />
+              </Route>
+
+              {/* Admin panel */}
+              <Route
+                path="/admin"
+                element={
+                  <AdminGuard>
+                    <AdminLayout />
+                  </AdminGuard>
+                }
+              >
+                <Route index element={<AdminOverview />} />
+                <Route path="users" element={<AdminUsers />} />
+                <Route path="access-requests" element={<AdminAccessRequests />} />
+                <Route path="intake-forms" element={<AdminIntakes />} />
+                <Route path="modules" element={<AdminModules />} />
               </Route>
 
               <Route path="*" element={<NotFound />} />
