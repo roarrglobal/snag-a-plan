@@ -1,0 +1,2 @@
+ALTER TABLE public.scan_sessions ADD COLUMN IF NOT EXISTS status text NOT NULL DEFAULT 'completed';
+CREATE INDEX IF NOT EXISTS scan_sessions_user_status_idx ON public.scan_sessions(user_id, status, created_at DESC);
