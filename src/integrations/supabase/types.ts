@@ -840,6 +840,7 @@ export type Database = {
       }
       nerve_user_profiles: {
         Row: {
+          calendly_url: string | null
           company_name: string
           created_at: string
           full_name: string
@@ -850,9 +851,11 @@ export type Database = {
           onboarding_status: string
           primary_module: string | null
           team_size: string | null
+          unread_admin_notifications: number
           updated_at: string
         }
         Insert: {
+          calendly_url?: string | null
           company_name?: string
           created_at?: string
           full_name?: string
@@ -863,9 +866,11 @@ export type Database = {
           onboarding_status?: string
           primary_module?: string | null
           team_size?: string | null
+          unread_admin_notifications?: number
           updated_at?: string
         }
         Update: {
+          calendly_url?: string | null
           company_name?: string
           created_at?: string
           full_name?: string
@@ -876,6 +881,7 @@ export type Database = {
           onboarding_status?: string
           primary_module?: string | null
           team_size?: string | null
+          unread_admin_notifications?: number
           updated_at?: string
         }
         Relationships: []
