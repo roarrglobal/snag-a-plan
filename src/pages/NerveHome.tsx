@@ -1024,7 +1024,25 @@ export default function NerveHome() {
             <SectionLabel>The Nerve System</SectionLabel>
           </Reveal>
           <Reveal delay={0.1}>
-            <SectionHeading>Four modules. One closed loop.</SectionHeading>
+            <SectionHeading>Four modules.</SectionHeading>
+          </Reveal>
+          <Reveal delay={0.15}>
+            <h2
+              className="nerve-section-heading"
+              style={{
+                fontFamily: "Inter, sans-serif",
+                fontWeight: 300,
+                fontSize: 48,
+                letterSpacing: "-0.03em",
+                lineHeight: 1.1,
+                margin: "8px 0 0",
+              }}
+            >
+              <span style={{ color: MODULES.PULSE.primary }}>Pulse.</span>
+              <span style={{ color: MODULES.SCAN.primary }}> Scan.</span>
+              <span style={{ color: MODULES.ZERO.primary }}> ZERO.</span>
+              <span style={{ color: MODULES.SNAG.primary }}> SNAG.</span>
+            </h2>
           </Reveal>
           <Reveal delay={0.2}>
             <p
@@ -1043,16 +1061,8 @@ export default function NerveHome() {
             </p>
           </Reveal>
           <Reveal delay={0.3}>
-            <div
-              style={{
-                marginTop: 32,
-                fontWeight: 500,
-                fontSize: 13,
-                letterSpacing: "0.06em",
-                color: COBALT,
-              }}
-            >
-              PULSE → SCAN → ZERO → SNAG → PULSE
+            <div style={{ marginTop: 24, display: "flex", justifyContent: "center" }}>
+              <FlowLine />
             </div>
           </Reveal>
         </div>
@@ -1061,83 +1071,88 @@ export default function NerveHome() {
           className="nerve-modules-grid"
           style={{
             maxWidth: 1100,
-            margin: "64px auto 0",
+            margin: "48px auto 0",
             display: "grid",
             gridTemplateColumns: "repeat(2, 1fr)",
             gap: 24,
+            alignItems: "stretch",
           }}
         >
-          <Reveal>
-            <ModuleCard
-              name="PULSE"
+          <Reveal delay={0}>
+            <ColoredModuleCard
+              moduleKey="PULSE"
+              Icon={Activity}
               tier="Execution Governance"
               headline="Monitors revenue health daily"
-              body="Pipeline hygiene scoring, CRM integrity enforcement, deal decay alerts, manager coaching signals. Pulse tells you what behavior is creating risk right now."
-              cta="Learn more →"
-              ctaHref="/pulse"
-              tag="Continuous · Daily alerts · CRM-connected"
+              body="Pipeline hygiene scoring, CRM integrity enforcement, deal decay alerts, and manager coaching signals. Pulse tells you what behavior is creating risk right now — not what happened last quarter."
+              cta="Learn more"
+              tag="Continuous monitoring"
+              onClick={() => navigate("/pulse")}
             />
           </Reveal>
           <Reveal delay={0.1}>
-            <ModuleCard
-              name="SCAN"
+            <ColoredModuleCard
+              moduleKey="SCAN"
+              Icon={ScanLine}
               tier="Revenue Structure Diagnostic"
               headline="Identifies the structural break"
               body="Eight-pillar diagnostic across Foundation, Execution, Compounding, and AI layers. One binding constraint. One financial impact number. Twenty minutes."
-              cta="Run your free Scan →"
-              ctaHref="/scan"
-              tag="Free · 20 minutes · No CRM needed"
+              cta="Run your free Scan"
+              tag="Free · 20 minutes"
+              onClick={() => navigate("/scan")}
             />
           </Reveal>
           <Reveal delay={0.2}>
-            <ModuleCard
-              name="ZERO"
+            <ColoredModuleCard
+              moduleKey="ZERO"
+              Icon={Search}
               tier="Belief Examination"
               headline="Examines the belief causing it"
-              body="Every structural problem is held in place by a belief no one has questioned. ZERO applies first-principles reasoning to surface it, classify it, and determine whether it holds."
-              cta="Learn more →"
-              ctaHref="/zero"
-              tag="First-principles · Traceable output · Board-ready"
+              body="Every structural problem is held in place by a belief no one has questioned. ZERO applies first-principles reasoning to surface it, classify it, and determine whether it holds under adversarial examination."
+              cta="Learn more"
+              tag="First-principles"
+              onClick={() => navigate("/zero")}
             />
           </Reveal>
           <Reveal delay={0.3}>
-            <ModuleCard
-              name="SNAG"
+            <ColoredModuleCard
+              moduleKey="SNAG"
+              Icon={ShieldCheck}
               tier="Decision Gate"
               headline="Gates every commitment before it moves"
-              body="Surface the hidden assumption. Name the failure mode. Set the 30-day alert. Write the kill criterion. No revenue motion proceeds without clearing the gate."
-              cta="Open SNAG →"
-              ctaHref="/analyze"
-              tag="Pre-commitment · Team decision · Kill criterion"
+              body="Surface the hidden assumption. Name the failure mode. Set the 30-day alert signal. Write the kill criterion before you commit. No revenue motion proceeds without clearing the gate."
+              cta="Open SNAG"
+              tag="Pre-commitment gate"
+              onClick={() => navigate("/analyze")}
             />
           </Reveal>
         </div>
 
         {/* Connector card */}
-        <Reveal delay={0.2}>
+        <Reveal delay={0.4}>
           <div
             className="nerve-connector"
             style={{
               maxWidth: 1100,
-              margin: "32px auto 0",
+              margin: "24px auto 0",
               background: NAVY,
               borderRadius: 16,
-              padding: 48,
+              padding: "48px 56px",
               color: "#FFFFFF",
-              display: "grid",
-              gridTemplateColumns: "60% 40%",
+              display: "flex",
               alignItems: "center",
+              justifyContent: "space-between",
               gap: 32,
             }}
           >
-            <div>
+            <div style={{ flex: 1 }}>
               <div
                 style={{
-                  fontWeight: 500,
-                  fontSize: 12,
+                  fontWeight: 600,
+                  fontSize: 11,
                   letterSpacing: "0.1em",
                   textTransform: "uppercase",
-                  color: "#4D8BE0",
+                  color: COBALT,
                   marginBottom: 16,
                 }}
               >
@@ -1150,25 +1165,28 @@ export default function NerveHome() {
                   color: "#FFFFFF",
                   lineHeight: 1.2,
                   margin: 0,
+                  marginBottom: 16,
                   letterSpacing: "-0.02em",
                 }}
               >
                 All four modules. One closed loop.
               </h3>
+              <FlowLine onDark />
               <p
                 style={{
                   marginTop: 16,
-                  fontSize: 16,
-                  color: "rgba(255,255,255,0.7)",
+                  maxWidth: 480,
+                  fontSize: 15,
+                  color: "rgba(255,255,255,0.6)",
                   lineHeight: 1.65,
                 }}
               >
-                Pulse detects execution decay. Scan identifies the structural
-                break. ZERO examines the belief. SNAG gates the decision. Pulse
+                Pulse detects execution decay. Scan identifies the constraint.
+                ZERO examines the belief. SNAG gates the decision. Pulse
                 monitors what happens next.
               </p>
             </div>
-            <div style={{ textAlign: "right" }} className="nerve-connector-cta">
+            <div style={{ flexShrink: 0, marginLeft: 48 }} className="nerve-connector-cta">
               <PrimaryBtn invert onClick={() => navigate("/diagnostic")}>
                 See full system →
               </PrimaryBtn>
@@ -1176,6 +1194,8 @@ export default function NerveHome() {
           </div>
         </Reveal>
       </section>
+
+
 
       {/* ============ SECTION 5 — ENTRY POINT SELECTOR ============ */}
       <section
