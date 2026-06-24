@@ -380,11 +380,47 @@ export function AnalysisResults({
         </AnalysisSection>
 
         {/* The Unasked Question */}
-        <AnalysisSection title="The Unasked Question" accentColor="cobalt">
+        <AnalysisSection title="? — The unasked question" subtitle="The question your team has not asked yet" accentColor="cobalt">
           <p className="text-[16px] font-medium text-[#1A1A1A] italic leading-relaxed">
-            "{result?.unasked_question || "What question haven't you asked yourself?"}"
+            "{result?.unasked_question || "What question has your team not asked yet?"}"
           </p>
         </AnalysisSection>
+
+        {/* Team next steps */}
+        <div
+          className="rounded-lg p-5 mt-4 mb-3"
+          style={{ background: "#0A1628", border: "1px solid rgba(0,71,171,0.4)" }}
+        >
+          <h3 style={{ color: "#FFFFFF", fontSize: 14, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 16 }}>
+            Team next steps
+          </h3>
+          <ul style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {[
+              "Share this gate with your revenue leadership team before committing",
+              "Assign the Alert signal to a named owner who will monitor it for 30 days",
+              "Write the Gate criterion into your next pipeline review agenda as a standing checkpoint",
+            ].map((step) => (
+              <li key={step} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                <span
+                  aria-hidden
+                  style={{
+                    width: 18,
+                    height: 18,
+                    borderRadius: 4,
+                    border: "1.5px solid #0047AB",
+                    flexShrink: 0,
+                    marginTop: 2,
+                    background: "rgba(0,71,171,0.1)",
+                  }}
+                />
+                <span style={{ color: "rgba(255,255,255,0.85)", fontSize: 14, lineHeight: 1.55 }}>
+                  {step}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
 
         {/* Bottom Line */}
         {result.bottom_line && (
