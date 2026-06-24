@@ -1824,49 +1824,76 @@ export type Database = {
       }
       zero_sessions: {
         Row: {
-          belief_statement: string
+          belief_statement: string | null
           classification: string | null
+          context_text: string | null
           counter_position_response: string | null
           created_at: string
+          decision_text: string | null
           guest_email: string | null
           id: string
           modification_note: string | null
           origin_selection: string | null
-          pillar_name: string
-          pillar_number: number
+          overall_verdict: string | null
+          pillar_name: string | null
+          pillar_number: number | null
           scan_session_id: string | null
+          stage1_register: Json | null
+          stage2_inference: Json | null
+          stage3_inversion: Json | null
+          stage4_matrix: Json | null
+          stage5_protocol: Json | null
+          status: string
           updated_at: string
           user_id: string | null
           verdict: string | null
         }
         Insert: {
-          belief_statement: string
+          belief_statement?: string | null
           classification?: string | null
+          context_text?: string | null
           counter_position_response?: string | null
           created_at?: string
+          decision_text?: string | null
           guest_email?: string | null
           id?: string
           modification_note?: string | null
           origin_selection?: string | null
-          pillar_name: string
-          pillar_number: number
+          overall_verdict?: string | null
+          pillar_name?: string | null
+          pillar_number?: number | null
           scan_session_id?: string | null
+          stage1_register?: Json | null
+          stage2_inference?: Json | null
+          stage3_inversion?: Json | null
+          stage4_matrix?: Json | null
+          stage5_protocol?: Json | null
+          status?: string
           updated_at?: string
           user_id?: string | null
           verdict?: string | null
         }
         Update: {
-          belief_statement?: string
+          belief_statement?: string | null
           classification?: string | null
+          context_text?: string | null
           counter_position_response?: string | null
           created_at?: string
+          decision_text?: string | null
           guest_email?: string | null
           id?: string
           modification_note?: string | null
           origin_selection?: string | null
-          pillar_name?: string
-          pillar_number?: number
+          overall_verdict?: string | null
+          pillar_name?: string | null
+          pillar_number?: number | null
           scan_session_id?: string | null
+          stage1_register?: Json | null
+          stage2_inference?: Json | null
+          stage3_inversion?: Json | null
+          stage4_matrix?: Json | null
+          stage5_protocol?: Json | null
+          status?: string
           updated_at?: string
           user_id?: string | null
           verdict?: string | null
