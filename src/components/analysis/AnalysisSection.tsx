@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 
 interface AnalysisSectionProps {
   title: string;
+  subtitle?: string;
   accentColor: "cobalt" | "red" | "amber" | "gray";
   children: React.ReactNode;
   defaultOpen?: boolean;
@@ -19,6 +20,7 @@ const accentColors = {
 
 export function AnalysisSection({
   title,
+  subtitle,
   accentColor,
   children,
   defaultOpen = true,
@@ -36,8 +38,15 @@ export function AnalysisSection({
         onClick={() => setIsOpen(!isOpen)}
         className="w-full flex items-center justify-between p-4 min-h-[48px] text-left"
       >
-        <span className="text-[14px] font-bold text-[#1A1A1A] uppercase tracking-wide">
-          {title}
+        <span className="flex flex-col">
+          <span className="text-[14px] font-bold text-[#1A1A1A] uppercase tracking-wide">
+            {title}
+          </span>
+          {subtitle && (
+            <span className="text-[12px] font-normal text-[#666666] normal-case tracking-normal mt-1">
+              {subtitle}
+            </span>
+          )}
         </span>
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
@@ -46,6 +55,7 @@ export function AnalysisSection({
           <ChevronDown className="w-5 h-5 text-[#999999]" />
         </motion.div>
       </button>
+
 
       <AnimatePresence initial={false}>
         {isOpen && (
