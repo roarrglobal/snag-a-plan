@@ -262,7 +262,7 @@ export function AnalysisResults({
           {/* Plan Summary Card */}
           <div className="bg-white border border-[#E5E5E5] rounded-lg p-4 mb-4">
             <p className="text-[11px] font-semibold text-[#999999] uppercase tracking-wide mb-2">
-              YOUR PLAN
+              THE DECISION
             </p>
             <p className="text-[15px] text-[#333333] leading-relaxed">
               {originalInput}
