@@ -87,6 +87,10 @@ import ScanReports from "./pages/scan/ScanReports";
 import ZeroDashboard from "./pages/zero/ZeroDashboard";
 import ZeroNew from "./pages/zero/ZeroNew";
 import ZeroResults from "./pages/zero/ZeroResults";
+import PulseDashboard from "./pages/pulse/PulseDashboard";
+import Onboarding from "./pages/Onboarding";
+import Pending from "./pages/Pending";
+import { ModuleAccessGuard } from "./components/ModuleAccessGuard";
 
 const queryClient = new QueryClient();
 
