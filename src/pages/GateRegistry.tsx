@@ -172,6 +172,38 @@ export default function GateRegistry() {
           <StatCard n={counts.cleared} label="Cleared — decision gated" color="#0D9488" />
         </div>
 
+        {/* Search */}
+        <div className="mt-6" style={{ position: "relative" }}>
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search by decision text, owner, or source (scan, zero)…"
+            style={{
+              width: "100%", padding: "12px 40px 12px 16px",
+              border: "1px solid #E5E7EB", borderRadius: 10,
+              fontSize: 14, color: "#0A1628", outline: "none",
+              fontFamily: "Inter, sans-serif",
+            }}
+            onFocus={(e) => (e.currentTarget.style.borderColor = "#BE3455")}
+            onBlur={(e) => (e.currentTarget.style.borderColor = "#E5E7EB")}
+          />
+          {query && (
+            <button
+              onClick={() => setQuery("")}
+              style={{
+                position: "absolute", right: 12, top: "50%",
+                transform: "translateY(-50%)", background: "transparent",
+                border: "none", color: "#6B7280", cursor: "pointer",
+                fontSize: 18, lineHeight: 1, padding: 4,
+              }}
+              aria-label="Clear search"
+            >
+              ×
+            </button>
+          )}
+        </div>
+
         {/* Filters */}
         <div className="flex flex-wrap items-center gap-2 mt-6">
           {(["all","active","fired","cleared","expired"] as const).map((f) => (
