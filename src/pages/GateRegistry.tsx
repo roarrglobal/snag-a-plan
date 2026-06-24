@@ -93,9 +93,19 @@ export default function GateRegistry() {
   }, [gates]);
 
   const visible = useMemo(() => {
-    if (filter === "all") return gates;
-    return gates.filter((g) => (g.gate_status || "active") === filter);
-  }, [gates, filter]);
+    let list = gates;
+    if (filter !== "all") list = list.filter((g) => (g.gate_status || "active") === filter);
+    const q = query.trim().toLowerCase();
+    if (q) {
+      list = list.filter((g) =>
+        (g.original_input || "").toLowerCase().includes(q) ||
+        (g.title || "").toLowerCase().includes(q) ||
+        (g.owner_name || "").toLowerCase().includes(q) ||
+        (g.source_module || "").toLowerCase().includes(q)
+      );
+    }
+    return list;
+  }, [gates, filter, query]);
 
   const updateStatus = async (id: string, next: GateStatus) => {
     const prev = gates;
