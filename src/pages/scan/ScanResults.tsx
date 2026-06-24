@@ -73,6 +73,37 @@ export default function ScanResults() {
 
   return (
     <NerveShell>
+      {saved && (
+        <div
+          style={{
+            background: "#EFF6FF",
+            borderBottom: "1px solid rgba(0,71,171,0.2)",
+            color: "#1E3A5F",
+            fontFamily: "Inter, sans-serif",
+            fontWeight: 400,
+            fontSize: 14,
+            padding: "12px 24px",
+            width: "100%",
+          }}
+        >
+          {user ? (
+            <>
+              Your diagnostic has been saved to your account.{" "}
+              <Link to="/dashboard" style={{ color: "#0047AB", fontWeight: 500 }}>
+                View all diagnostics →
+              </Link>
+            </>
+          ) : (
+            <>
+              Save your diagnostic —{" "}
+              <Link to="/signup?module=scan" style={{ color: "#0047AB", fontWeight: 500 }}>
+                Create free account
+              </Link>{" "}
+              to access this report again and track improvement.
+            </>
+          )}
+        </div>
+      )}
       <main className="mx-auto px-6 py-10" style={{ maxWidth: 900 }}>
         <header className="mb-8">
           <h1 style={{ fontWeight: 600, fontSize: 32, letterSpacing: "-0.02em" }}>
