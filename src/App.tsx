@@ -8,6 +8,7 @@ import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AppLayout } from "@/components/layout/AppLayout";
 import MarketingHome from "./pages/MarketingHome";
+import NerveHome from "./pages/NerveHome";
 import ProductPage from "./pages/ProductPage";
 import PricingPage from "./pages/PricingPage";
 import AboutPage from "./pages/AboutPage";
