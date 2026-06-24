@@ -1076,6 +1076,7 @@ export type Database = {
           id: string
           pillar_scores: Json
           snag_session_id: string | null
+          status: string
           updated_at: string
           user_id: string | null
           zero_session_id: string | null
@@ -1090,6 +1091,7 @@ export type Database = {
           id?: string
           pillar_scores: Json
           snag_session_id?: string | null
+          status?: string
           updated_at?: string
           user_id?: string | null
           zero_session_id?: string | null
@@ -1104,6 +1106,7 @@ export type Database = {
           id?: string
           pillar_scores?: Json
           snag_session_id?: string | null
+          status?: string
           updated_at?: string
           user_id?: string | null
           zero_session_id?: string | null

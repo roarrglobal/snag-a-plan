@@ -81,10 +81,9 @@ import TeamAdminPage from "./pages/TeamAdminPage";
 import TeamAuditLogPage from "./pages/TeamAuditLogPage";
 import { TeamLayout } from "@/components/team/TeamLayout";
 import SharedSnagPage from "./pages/SharedSnagPage";
-import ScanEntry from "./pages/scan/ScanEntry";
-import ScanInputs from "./pages/scan/ScanInputs";
-import ScanDiagnostic from "./pages/scan/ScanDiagnostic";
-import ScanResults from "./pages/scan/ScanResults";
+import ScanDashboard from "./pages/scan/ScanDashboard";
+import ScanNew from "./pages/scan/ScanNew";
+import ScanReports from "./pages/scan/ScanReports";
 import Zero from "./pages/Zero";
 
 const queryClient = new QueryClient();
@@ -134,10 +133,9 @@ const App = () => {
               <Route path="/s/:code" element={<SharedSnagPage />} />
 
               {/* Nerve Scan module */}
-              <Route path="/scan" element={<ScanEntry />} />
-              <Route path="/scan/inputs" element={<ScanInputs />} />
-              <Route path="/scan/diagnostic" element={<ScanDiagnostic />} />
-              <Route path="/scan/results" element={<ScanResults />} />
+              <Route path="/scan" element={<ScanDashboard />} />
+              <Route path="/scan/new" element={<ScanNew />} />
+              <Route path="/scan/reports" element={<ScanReports />} />
 
               {/* ZERO belief examination module */}
               <Route path="/zero" element={<Zero />} />
