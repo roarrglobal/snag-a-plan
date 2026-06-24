@@ -110,7 +110,7 @@ function ColoredModuleCard({
   onClick,
 }: {
   moduleKey: ModuleKey;
-  Icon: React.ComponentType<{ size?: number; color?: string; strokeWidth?: number }>;
+  Icon: React.ComponentType<any>;
   tier: string;
   headline: string;
   body: string;
