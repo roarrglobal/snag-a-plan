@@ -50,6 +50,7 @@ export default function GateRegistry() {
   const [gates, setGates] = useState<Gate[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | GateStatus>("all");
+  const [query, setQuery] = useState("");
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [ownerEdit, setOwnerEdit] = useState<Record<string, string>>({});
 
@@ -92,9 +93,19 @@ export default function GateRegistry() {
   }, [gates]);
 
   const visible = useMemo(() => {
-    if (filter === "all") return gates;
-    return gates.filter((g) => (g.gate_status || "active") === filter);
-  }, [gates, filter]);
+    let list = gates;
+    if (filter !== "all") list = list.filter((g) => (g.gate_status || "active") === filter);
+    const q = query.trim().toLowerCase();
+    if (q) {
+      list = list.filter((g) =>
+        (g.original_input || "").toLowerCase().includes(q) ||
+        (g.title || "").toLowerCase().includes(q) ||
+        (g.owner_name || "").toLowerCase().includes(q) ||
+        (g.source_module || "").toLowerCase().includes(q)
+      );
+    }
+    return list;
+  }, [gates, filter, query]);
 
   const updateStatus = async (id: string, next: GateStatus) => {
     const prev = gates;
@@ -159,6 +170,38 @@ export default function GateRegistry() {
           <StatCard n={counts.active} label="Active — awaiting signal" color="#BE3455" />
           <StatCard n={counts.fired} label="Signal fired" color="#D97706" />
           <StatCard n={counts.cleared} label="Cleared — decision gated" color="#0D9488" />
+        </div>
+
+        {/* Search */}
+        <div className="mt-6" style={{ position: "relative" }}>
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search by decision text, owner, or source (scan, zero)…"
+            style={{
+              width: "100%", padding: "12px 40px 12px 16px",
+              border: "1px solid #E5E7EB", borderRadius: 10,
+              fontSize: 14, color: "#0A1628", outline: "none",
+              fontFamily: "Inter, sans-serif",
+            }}
+            onFocus={(e) => (e.currentTarget.style.borderColor = "#BE3455")}
+            onBlur={(e) => (e.currentTarget.style.borderColor = "#E5E7EB")}
+          />
+          {query && (
+            <button
+              onClick={() => setQuery("")}
+              style={{
+                position: "absolute", right: 12, top: "50%",
+                transform: "translateY(-50%)", background: "transparent",
+                border: "none", color: "#6B7280", cursor: "pointer",
+                fontSize: 18, lineHeight: 1, padding: 4,
+              }}
+              aria-label="Clear search"
+            >
+              ×
+            </button>
+          )}
         </div>
 
         {/* Filters */}
