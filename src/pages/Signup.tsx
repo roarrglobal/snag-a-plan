@@ -85,9 +85,7 @@ export default function Signup() {
 
   useEffect(() => {
     if (!authLoading && user) {
-      const mod = (localStorage.getItem("nerve_onboarding_module") as ModuleKey) || "scan";
-      const route = MODULES.find((m) => m.key === mod)?.route || "/dashboard";
-      navigate(route, { replace: true });
+      navigate("/onboarding", { replace: true });
     }
   }, [user, authLoading, navigate]);
 
