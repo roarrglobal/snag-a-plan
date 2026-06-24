@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Check, Radar, Shield, Compass, Activity, ArrowLeft } from "lucide-react";
+import { Check, Radar, Shield, Compass, Activity, ArrowLeft, type LucideIcon } from "lucide-react";
 
 const NAVY = "#0A1628";
 const COBALT = "#0047AB";
@@ -16,7 +16,7 @@ type ModuleKey = "scan" | "snag" | "zero" | "pulse";
 interface ModuleDef {
   key: ModuleKey;
   tag: string;
-  Icon: React.ComponentType<{ size?: number; color?: string }>;
+  Icon: LucideIcon;
   headline: string;
   body: string;
   pill: string;
