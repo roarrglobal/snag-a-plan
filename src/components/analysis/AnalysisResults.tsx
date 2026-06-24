@@ -320,7 +320,7 @@ export function AnalysisResults({
         </AnalysisSection>
 
         {/* Warning Signals */}
-        <AnalysisSection title="Warning Signals" accentColor="amber">
+        <AnalysisSection title="A — Alert" subtitle="The 30-day observable warning signal in your CRM or pipeline data" accentColor="amber">
           <ul className="space-y-3">
             {warningSignals.map((signal, i) => (
               <li key={i} className="border-b border-[#F0F0F0] pb-3 last:border-b-0 last:pb-0">
