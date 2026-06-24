@@ -25,7 +25,8 @@ import {
   StickyNote,
   Radar,
   ShieldCheck,
-  List
+  List,
+  CircleDashed
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -75,6 +76,7 @@ const getNavItems = (userType: string): NavItem[] => {
   const common: NavItem[] = [
     { label: "Dashboard", href: "/dashboard", icon: <Home className="w-4 h-4" /> },
     { label: "Scan", href: "/scan", icon: <Radar className="w-4 h-4" /> },
+    { label: "ZERO", href: "/zero", icon: <CircleDashed className="w-4 h-4" /> },
   ];
 
   if (userType === "business") {
