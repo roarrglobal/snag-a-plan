@@ -251,7 +251,7 @@ export function AnalysisResults({
               <ArrowLeft className="w-5 h-5" />
             </button>
             <span className="text-[18px] font-bold text-[#1A1A1A]">
-              SNAG ANALYSIS
+              SNAG — DECISION GATE
             </span>
             <div className="w-9" />
           </div>
