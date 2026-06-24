@@ -98,7 +98,8 @@ const App = () => {
           <BrowserRouter>
             <Routes>
               {/* Public routes */}
-              <Route path="/" element={<MarketingHome />} />
+              <Route path="/" element={<NerveHome />} />
+              <Route path="/snagme" element={<MarketingHome />} />
               <Route path="/product" element={<ProductPage />} />
               <Route path="/pricing" element={<PricingPage />} />
               <Route path="/solutions" element={<SolutionsPage />} />
