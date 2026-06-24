@@ -56,13 +56,6 @@ export default function GateRegistry() {
   useEffect(() => {
     if (!user) return;
     (async () => {
-      // Backfill any missing signal_due_date (one-time per mount)
-      await supabase
-        .from("analyses" as any)
-        .update({ signal_due_date: null } as any)
-        .eq("user_id", user.id)
-        .is("signal_due_date", null);
-      // Re-fetch with backfill via RPC-less approach: compute client-side and patch missing
       const { data } = await supabase
         .from("analyses" as any)
         .select("id, title, original_input, result, created_at, gate_status, owner_name, signal_due_date, source_module, source_session_id")
