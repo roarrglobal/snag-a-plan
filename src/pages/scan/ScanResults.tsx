@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { NerveShell } from "@/scan/NerveShell";
 import { PILLARS, CALENDLY_URL } from "@/scan/pillars";
@@ -14,6 +14,7 @@ import {
 } from "@/scan/calc";
 import { RadarPanel } from "@/scan/RadarPanel";
 import { useAuth } from "@/contexts/AuthContext";
+import { saveScanSession } from "@/lib/saveScanSession";
 
 export default function ScanResults() {
   const navigate = useNavigate();
@@ -35,6 +36,8 @@ export default function ScanResults() {
   const impact = inputs ? computeImpact(inputs) : null;
   const currency = "$";
 
+  const [saved, setSaved] = useState<boolean>(() => !!sessionStorage.getItem("nerve_scan_session_id"));
+
   useEffect(() => {
     const payload = {
       created_at: new Date().toISOString(),
@@ -48,6 +51,15 @@ export default function ScanResults() {
       localStorage.setItem("nerve_scan_last_result", JSON.stringify(payload));
     } catch {}
   }, [user, inputs, scores, binding, impact]);
+
+  useEffect(() => {
+    if (!inputs || !impact) return;
+    if (sessionStorage.getItem("nerve_scan_session_id")) return;
+    saveScanSession({ companyInputs: inputs, scores, binding, impact }).then((res) => {
+      if (res) setSaved(true);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!inputs) {
     return (
