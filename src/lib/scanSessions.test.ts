@@ -9,9 +9,9 @@ const insertSingle = vi.fn().mockResolvedValue({ data: { id: "new-session-id" },
 const insertSelect = vi.fn(() => ({ single: insertSingle }));
 const insert = vi.fn(() => ({ select: insertSelect }));
 
-const fromMock = vi.fn(() => ({ insert, update }));
+const fromMock = vi.fn((..._args: any[]) => ({ insert, update }));
 const getUserMock = vi.fn().mockResolvedValue({ data: { user: { id: "user-1", email: "u@example.com" } } });
-const invokeMock = vi.fn().mockResolvedValue({ data: null, error: null });
+const invokeMock = vi.fn((..._args: any[]) => Promise.resolve({ data: null, error: null }));
 
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
@@ -74,7 +74,7 @@ describe("scanSessions — autosave", () => {
     expect(update).toHaveBeenCalledTimes(1);
     expect(updateEq).toHaveBeenCalledWith("id", "sess-123");
 
-    const payload = update.mock.calls[0][0];
+    const payload: any = (update.mock.calls[0] as any[])[0];
     expect(Array.isArray(payload.pillar_scores)).toBe(true);
     expect(payload.pillar_scores).toHaveLength(PILLARS.length);
 
@@ -102,7 +102,7 @@ describe("scanSessions — createInProgressSession", () => {
 
     expect(id).toBe("new-session-id");
     expect(fromMock).toHaveBeenCalledWith("scan_sessions");
-    const payload = insert.mock.calls[0][0];
+    const payload: any = (insert.mock.calls[0] as any[])[0];
     expect(payload.status).toBe("in_progress");
     expect(payload.completed).toBe(false);
     expect(payload.user_id).toBe("user-1");
