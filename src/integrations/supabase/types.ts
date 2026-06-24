@@ -1819,6 +1819,65 @@ export type Database = {
         }
         Relationships: []
       }
+      zero_sessions: {
+        Row: {
+          belief_statement: string
+          classification: string | null
+          counter_position_response: string | null
+          created_at: string
+          guest_email: string | null
+          id: string
+          modification_note: string | null
+          origin_selection: string | null
+          pillar_name: string
+          pillar_number: number
+          scan_session_id: string | null
+          updated_at: string
+          user_id: string | null
+          verdict: string | null
+        }
+        Insert: {
+          belief_statement: string
+          classification?: string | null
+          counter_position_response?: string | null
+          created_at?: string
+          guest_email?: string | null
+          id?: string
+          modification_note?: string | null
+          origin_selection?: string | null
+          pillar_name: string
+          pillar_number: number
+          scan_session_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+          verdict?: string | null
+        }
+        Update: {
+          belief_statement?: string
+          classification?: string | null
+          counter_position_response?: string | null
+          created_at?: string
+          guest_email?: string | null
+          id?: string
+          modification_note?: string | null
+          origin_selection?: string | null
+          pillar_name?: string
+          pillar_number?: number
+          scan_session_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+          verdict?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "zero_sessions_scan_session_id_fkey"
+            columns: ["scan_session_id"]
+            isOneToOne: false
+            referencedRelation: "scan_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       public_profiles: {
