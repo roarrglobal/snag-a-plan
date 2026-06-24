@@ -1,121 +1,93 @@
-## Scan Module Rebuild — Product Workspace
+## ZERO Module — Full Product Workspace Rebuild
 
-Convert `/scan` from a standalone diagnostic flow into an authenticated product workspace mirroring SNAG's architecture (dashboard + history + session input + output), using the Cobalt color system.
+Rebuild `/zero` as a complete authenticated product workspace mirroring the SNAG/Scan architecture, implementing all five stages of the ZERO framework with AI assistance via edge functions.
+
+### Color & Type System
+- Primary `#D97706`, Light `#FFFBEB`, Dark `#78350F`, borders `rgba(217,119,6,0.2/0.8)`, Inter throughout.
 
 ### Routes
+- `/zero` — auth gate (unauth) → workspace dashboard (auth) with left sidebar history + right main
+- `/zero/new` — Step 0 decision capture, then 5 stages
+- `/zero/new/stage/[1-5]` — stage screens (or single stepper component switching by `stage` query param)
+- `/zero/[session_id]` — results view
 
-| Route | Purpose |
-|---|---|
-| `/scan` | Auth-gated dashboard. Unauth → landing gate. |
-| `/scan/new` | 3-step session flow (Inputs → Pillars → Results). |
-| `/scan/reports` | Aggregate trends (2+ sessions required). |
+### Architecture
 
-The old `/scan/diagnostic`, `/scan/results`, `/scan/inputs`, `/scan/gate` routes are removed.
+```text
+src/zero/
+  ZeroShell.tsx              Sub-header (Amber "ZERO" pill + "+ New examination")
+  ZeroSessionList.tsx        Left sidebar history with verdict pills
+  ZeroOverview.tsx           Empty state (giant 0) + recent
+  ZeroResultsView.tsx        Full results summary + next-step CTAs
+  ZeroStepper.tsx            5-stage progress nav
+  steps/
+    DecisionStep.tsx         Step 0
+    Stage1Identification.tsx Inheritance Register + editable belief cards
+    Stage2Inference.tsx      Classification + defence statements
+    Stage3Inversion.tsx      Adversarial Judge + verdict
+    Stage4Ideation.tsx       Traceability Matrix table
+    Stage5Integration.tsx    Protocol + sign-off
 
-### Shell
-
-New `ScanShell` wraps all `/scan/*` routes inside the existing authed `AppLayout`. 56px sub-header below the main nav:
-- Left: "SCAN" Cobalt pill + "Revenue Structure Diagnostic" subtitle.
-- Right: "+ New Scan" Cobalt button → `/scan/new`.
-
-### Unauth gate
-
-When a visitor hits `/scan` without a session, render a centered landing card (white canvas, Cobalt pill, large H1, body copy, primary "Create free account" → `/signup?module=scan`, secondary "Sign in" → `/login?redirect=/scan`). No email capture, no guest mode.
-
-### Dashboard `/scan`
-
-Two-column layout:
-
-**Left sidebar (280px)** — `ScanSessionList`
-- "Scan History" header + "+ New Scan" link.
-- Session rows: binding pillar name (truncated 28ch), `$ARR · X ago`, right-side score chip colored green/amber/crimson by score band.
-- Empty state: "No scans yet" + CTA.
-
-**Right main** — three states:
-1. No sessions → giant "8" hero + CTA.
-2. Sessions exist, none selected → "Your Revenue System Overview" with 4 stat cards (count, most common constraint, latest score, trend ↑/↓) + recent sessions table (5 rows).
-3. Session selected → inline results view (same component as Step 3).
-
-Selection is URL-driven: `/scan?session=<id>`.
-
-### New session `/scan/new`
-
-Horizontal stepper (Inputs · Pillars · Results) in Cobalt.
-
-- **Step 1** — `ScanInputsStep`: 7-field form in a white card. On submit, INSERT `scan_sessions` row (`status='in_progress'`, `company_inputs` filled), store id in `sessionStorage['nerve_scan_session_id']`, advance.
-- **Step 2** — `ScanPillarsStep`: reuse existing pillar UX (sliders, evidence, live radar). After each pillar is fully scored, autosave `pillar_scores` JSON to the active session row.
-- **Step 3** — `ScanResultsStep`: compute binding + impact, UPDATE row with `binding_constraint`, `financial_impact`, `status='completed'`, then redirect to `/scan?session=<id>`.
-
-**Resume**: on entering `/scan/new`, query for the user's latest `status='in_progress'` row. If found, show a prompt "You have an incomplete scan from [date]. Resume / Start new". Resume jumps to the first incomplete pillar.
-
-### Reports `/scan/reports`
-
-Three Recharts panels (Cobalt):
-1. Bar — constraint frequency by pillar.
-2. Line — binding constraint score over time.
-3. Line — total financial impact over time.
-
-If <2 completed sessions, show "Run at least two scans to see trends."
-
-### Persistence
-
-Uses the existing `scan_sessions` table. One schema addition needed:
-
-```sql
-ALTER TABLE public.scan_sessions
-  ADD COLUMN IF NOT EXISTS status text NOT NULL DEFAULT 'completed';
--- status ∈ 'in_progress' | 'completed'
+src/lib/zeroSessions.ts      CRUD + autosave + resume helpers
+src/pages/zero/
+  ZeroGate.tsx               Unauth landing
+  ZeroDashboard.tsx          /zero
+  ZeroNew.tsx                /zero/new (hosts stepper)
+  ZeroResults.tsx            /zero/[session_id]
 ```
 
-(Existing `completed` boolean stays; new `status` drives resume/dashboard filtering.)
+### Database (migration)
+Augment `zero_sessions` (currently 14 cols) with whatever's missing:
+- `decision_text text`, `context_text text`, `scan_session_id uuid` (nullable FK)
+- `stage1_register jsonb`, `stage2_inference jsonb`, `stage3_inversion jsonb`, `stage4_matrix jsonb`, `stage5_protocol jsonb`
+- `overall_verdict text`, `status text default 'in_progress'`
+- RLS scoped to `auth.uid()` (read/write/update/delete own rows). GRANT to `authenticated` + `service_role`.
 
-Helper module `src/lib/scanSessions.ts`:
-- `createInProgressSession(companyInputs)`
-- `autosavePillarScores(id, pillarScores)`
-- `finalizeSession(id, binding, impact)`
-- `listSessions(userId)` / `getSession(id)` / `getInProgressForUser()`
+(Will check existing columns first and only ADD what's missing — no data loss.)
 
-The existing `saveScanSession.ts` is replaced by these helpers; the notification fire-and-forget moves into `finalizeSession`.
+### Edge Functions (5 new)
+`supabase/functions/zero-stage{1..5}-{generate,classify,invert,ideation,integration}/index.ts`
+
+Each:
+- CORS + POST JSON body
+- Uses **Lovable AI Gateway** with `google/gemini-2.5-pro` (project standard; no Anthropic key configured — Lovable AI is the supported path)
+- System prompts exactly as specified in the brief
+- Returns parsed JSON; 402/429/500 handled with clear error payloads
+
+> Note on AI provider: the brief says "Anthropic claude-sonnet-4-6" but this project uses the Lovable AI Gateway (no Anthropic key in secrets). I'll use `google/gemini-2.5-pro` via Lovable AI with identical prompt structure. If you want literal Anthropic, you'd need to add an `ANTHROPIC_API_KEY` secret and I'll swap providers.
+
+### Persistence flow
+- Step 0 → `INSERT zero_sessions {status:'in_progress', decision_text, context_text, scan_session_id?}` + cache id in `sessionStorage['nerve_zero_session_id']`
+- Each stage's "Continue →" → `UPDATE` with that stage's JSON + bump `status` to `stageN_complete`
+- Stage 5 sign-off → compute `overall_verdict`, set `status='completed'`, navigate to results
+- Resume: on `/zero/new` entry, if a session is `in_progress`, prompt to resume and jump to the first incomplete stage
+
+### Stage gating logic
+- S1 → S2: ≥3 load-bearing beliefs, all load-bearing have named source
+- S2 → S3: every load-bearing belief classified + defence written
+- S3 → S4: every belief has a verdict + ≥1 AI counter-position generated
+- S4 → S5: no SMUGGLED elements remain
+- S5 → complete: sign-off checkbox checked
+
+### Overall verdict logic
+PROCEED (all key survive) / PROCEED MODIFIED (some modified, none failed) / DO NOT PROCEED (≥1 failed) / INSUFFICIENT EVIDENCE (multiple indeterminate)
+
+### Scan integration
+- If `?scan_session_id=...` query present on `/zero/new`, fetch that scan, prefill decision text with binding-constraint sentence and context with evidence strings, show cobalt context banner.
+- Results "Open SNAG →" CTA navigates `/analyze?zero_session_id=...` (SNAG side already accepts query context).
 
 ### Navigation
+- `AppSidebar` ZERO entry becomes a parent group: icon `CircleDashed`, active color `#D97706`, sub-items "New examination" → `/zero/new`, "History" → `/zero`.
 
-`AppSidebar` Scan item becomes a parent group with sub-items "New Scan" (`/scan/new`) and "Reports" (`/scan/reports`); parent link goes to `/scan`. Icon `ScanLine`, Cobalt active state.
+### Routing (App.tsx)
+- Replace current `/zero` placeholder with the new pages, all under `AppLayout`. `/zero` itself renders `ZeroGate` when unauthenticated, `ZeroDashboard` when authenticated.
 
 ### Files
+**New (~17):** all of `src/zero/*`, `src/lib/zeroSessions.ts`, 4 `src/pages/zero/*`, 5 edge functions, 1 migration.
+**Modified:** `src/App.tsx`, `src/components/layout/AppSidebar.tsx`, `src/integrations/supabase/types.ts` (regen after migration).
 
-**New**
-- `src/scan/ScanShell.tsx` — sub-header chrome (white, Cobalt).
-- `src/scan/ScanSessionList.tsx` — sidebar history.
-- `src/scan/ScanOverview.tsx` — stat cards + recent table.
-- `src/scan/ScanResultsView.tsx` — extracted inline results renderer (used by dashboard + step 3).
-- `src/scan/ScanStepper.tsx` — 3-step indicator.
-- `src/scan/steps/InputsStep.tsx`
-- `src/scan/steps/PillarsStep.tsx` (refactor of existing `ScanDiagnostic.tsx` content, white canvas + Cobalt, with autosave).
-- `src/scan/steps/ResultsStep.tsx`
-- `src/lib/scanSessions.ts`
-- `src/pages/scan/ScanDashboard.tsx` (replaces `ScanEntry.tsx`)
-- `src/pages/scan/ScanNew.tsx`
-- `src/pages/scan/ScanReports.tsx`
-- `supabase/migrations/<ts>_scan_sessions_status.sql`
+### Out of scope (per brief)
+`/analyze`, `/scan`, landing page, auth, any other table, any other edge function.
 
-**Modified**
-- `src/App.tsx` — replace `/scan/*` routes (remove old children, add new ones, all under `AppLayout`).
-- `src/components/layout/AppSidebar.tsx` — Scan parent + 2 sub-items, `ScanLine` icon.
-
-**Removed**
-- `src/pages/scan/ScanEntry.tsx`
-- `src/pages/scan/ScanGate.tsx`
-- `src/pages/scan/ScanInputs.tsx`
-- `src/pages/scan/ScanDiagnostic.tsx`
-- `src/pages/scan/ScanResults.tsx`
-- `src/lib/saveScanSession.ts`
-- `src/scan/NerveShell.tsx` references inside `/scan` (kept if used elsewhere; replaced here by `ScanShell`).
-
-### Out of scope (untouched)
-
-`/analyze` (SNAG), `/zero`, landing page, auth flow, all other Supabase tables, the `scan-notification` edge function (still invoked from `finalizeSession`).
-
-### Confirmations needed
-
-1. The old guest/email-capture flow (`nerve_scan_email`, `nerve_scan_guest`) is fully retired — Scan becomes auth-only like SNAG. OK?
-2. Adding a `status` text column to `scan_sessions` (one DB migration). OK?
+### One confirmation before I build
+The brief specifies Anthropic `claude-sonnet-4-6`, but this project has no Anthropic key — only Lovable AI Gateway (Gemini/GPT). I'll default to **`google/gemini-2.5-pro`** via Lovable AI unless you tell me to add an `ANTHROPIC_API_KEY` secret instead.

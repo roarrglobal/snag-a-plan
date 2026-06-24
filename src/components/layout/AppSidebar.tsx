@@ -85,7 +85,15 @@ const getNavItems = (userType: string): NavItem[] => {
         { label: "Reports", href: "/scan/reports", icon: <BarChart3 className="w-4 h-4" /> },
       ],
     },
-    { label: "ZERO", href: "/zero", icon: <CircleDashed className="w-4 h-4" /> },
+    {
+      label: "ZERO",
+      href: "/zero",
+      icon: <CircleDashed className="w-4 h-4" />,
+      children: [
+        { label: "New examination", href: "/zero/new", icon: <Plus className="w-4 h-4" /> },
+        { label: "History", href: "/zero", icon: <List className="w-4 h-4" /> },
+      ],
+    },
   ];
 
   if (userType === "business") {
