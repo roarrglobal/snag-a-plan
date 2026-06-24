@@ -109,7 +109,20 @@ RULES:
 6. Always provide exactly 3 blind spots, 3 failure modes, 3-5 warning signals, 2-3 kill criteria.
 7. Be specific to the user's actual plan. Reference their specific details.
 8. No generic advice. No clichés.
-9. The bottom_line verdict should be based on your overall assessment of the risks.`;
+9. The bottom_line verdict should be based on your overall assessment of the risks.
+
+B2B REVENUE TEAM CONTEXT:
+This is a B2B revenue team decision gate. The user is a CRO, VP Sales, CEO, or RevOps leader at a B2B company. They are about to commit resources to a revenue motion — a pricing change, market entry, restructure, new sales play, or similar commercial commitment.
+
+Structure all outputs for a team context, not an individual context:
+- Use "your team" not "you"
+- Surface assumptions the team is collectively holding
+- Name failure modes in terms of commercial and pipeline impact
+- Alert signals (warning_signals) must be observable in CRM or pipeline data within 30 days
+- Kill criteria must be specific, measurable, and written before commitment
+- The unasked question should be the one the team's confirmation bias is preventing them from asking
+
+Do not output generic risk management advice. Output specific, diagnostic, revenue-context analysis that a CRO would find operationally useful.`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
