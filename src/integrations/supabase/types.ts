@@ -748,6 +748,138 @@ export type Database = {
           },
         ]
       }
+      nerve_intake_forms: {
+        Row: {
+          admin_notes: string | null
+          company_arr: string | null
+          created_at: string
+          current_situation: string
+          how_found: string | null
+          id: string
+          modules_requested: string[]
+          reviewed_at: string | null
+          reviewed_by: string | null
+          submitted_at: string
+          team_context: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          company_arr?: string | null
+          created_at?: string
+          current_situation: string
+          how_found?: string | null
+          id?: string
+          modules_requested?: string[]
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          submitted_at?: string
+          team_context?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          company_arr?: string | null
+          created_at?: string
+          current_situation?: string
+          how_found?: string | null
+          id?: string
+          modules_requested?: string[]
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          submitted_at?: string
+          team_context?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      nerve_module_access: {
+        Row: {
+          activated_at: string | null
+          activated_by: string | null
+          created_at: string
+          id: string
+          module: string
+          notes: string | null
+          requested_at: string
+          status: string
+          trial_expires_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          activated_at?: string | null
+          activated_by?: string | null
+          created_at?: string
+          id?: string
+          module: string
+          notes?: string | null
+          requested_at?: string
+          status?: string
+          trial_expires_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          activated_at?: string | null
+          activated_by?: string | null
+          created_at?: string
+          id?: string
+          module?: string
+          notes?: string | null
+          requested_at?: string
+          status?: string
+          trial_expires_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      nerve_user_profiles: {
+        Row: {
+          company_name: string
+          created_at: string
+          full_name: string
+          id: string
+          is_admin: boolean
+          job_title: string | null
+          notes: string | null
+          onboarding_status: string
+          primary_module: string | null
+          team_size: string | null
+          updated_at: string
+        }
+        Insert: {
+          company_name?: string
+          created_at?: string
+          full_name?: string
+          id: string
+          is_admin?: boolean
+          job_title?: string | null
+          notes?: string | null
+          onboarding_status?: string
+          primary_module?: string | null
+          team_size?: string | null
+          updated_at?: string
+        }
+        Update: {
+          company_name?: string
+          created_at?: string
+          full_name?: string
+          id?: string
+          is_admin?: boolean
+          job_title?: string | null
+          notes?: string | null
+          onboarding_status?: string
+          primary_module?: string | null
+          team_size?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           actor_id: string | null
@@ -2099,6 +2231,7 @@ export type Database = {
         Args: { p_template_id: string }
         Returns: undefined
       }
+      is_nerve_admin: { Args: never; Returns: boolean }
       is_team_admin: {
         Args: { p_team_id: string; p_user_id: string }
         Returns: boolean

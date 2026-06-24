@@ -85,9 +85,7 @@ export default function Signup() {
 
   useEffect(() => {
     if (!authLoading && user) {
-      const mod = (localStorage.getItem("nerve_onboarding_module") as ModuleKey) || "scan";
-      const route = MODULES.find((m) => m.key === mod)?.route || "/dashboard";
-      navigate(route, { replace: true });
+      navigate("/onboarding", { replace: true });
     }
   }, [user, authLoading, navigate]);
 
@@ -145,17 +143,16 @@ export default function Signup() {
       }
 
       const { data: sessionData } = await supabase.auth.getSession();
-      const route = selectedModule?.route || "/dashboard";
 
       if (sessionData?.session) {
-        navigate(route, { replace: true });
+        navigate("/onboarding", { replace: true });
       } else {
         toast({
           title: "Check your email",
-          description: "We've sent you a verification link to finish setup.",
+          description: "We've sent you a verification link. After verifying, sign in to complete onboarding.",
           duration: 10000,
         });
-        navigate("/login");
+        navigate("/login?redirect=/onboarding");
       }
     } finally {
       setIsLoading(false);

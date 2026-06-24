@@ -87,6 +87,10 @@ import ScanReports from "./pages/scan/ScanReports";
 import ZeroDashboard from "./pages/zero/ZeroDashboard";
 import ZeroNew from "./pages/zero/ZeroNew";
 import ZeroResults from "./pages/zero/ZeroResults";
+import PulseDashboard from "./pages/pulse/PulseDashboard";
+import Onboarding from "./pages/Onboarding";
+import Pending from "./pages/Pending";
+import { ModuleAccessGuard } from "./components/ModuleAccessGuard";
 
 const queryClient = new QueryClient();
 
@@ -134,21 +138,28 @@ const App = () => {
               <Route path="/unsubscribe" element={<UnsubscribePage />} />
               <Route path="/s/:code" element={<SharedSnagPage />} />
 
+              {/* Onboarding & pending (auth gates handle inside) */}
+              <Route path="/onboarding" element={<Onboarding />} />
+              <Route path="/pending" element={<Pending />} />
+
               {/* Nerve Scan module */}
-              <Route path="/scan" element={<ScanDashboard />} />
-              <Route path="/scan/new" element={<ScanNew />} />
-              <Route path="/scan/reports" element={<ScanReports />} />
+              <Route path="/scan" element={<ModuleAccessGuard module="scan"><ScanDashboard /></ModuleAccessGuard>} />
+              <Route path="/scan/new" element={<ModuleAccessGuard module="scan"><ScanNew /></ModuleAccessGuard>} />
+              <Route path="/scan/reports" element={<ModuleAccessGuard module="scan"><ScanReports /></ModuleAccessGuard>} />
 
               {/* ZERO belief examination module */}
-              <Route path="/zero" element={<ZeroDashboard />} />
-              <Route path="/zero/new" element={<ZeroNew />} />
-              <Route path="/zero/:id" element={<ZeroResults />} />
-              
-              
+              <Route path="/zero" element={<ModuleAccessGuard module="zero"><ZeroDashboard /></ModuleAccessGuard>} />
+              <Route path="/zero/new" element={<ModuleAccessGuard module="zero"><ZeroNew /></ModuleAccessGuard>} />
+              <Route path="/zero/:id" element={<ModuleAccessGuard module="zero"><ZeroResults /></ModuleAccessGuard>} />
+
+              {/* Pulse module (placeholder) */}
+              <Route path="/pulse" element={<ModuleAccessGuard module="pulse"><PulseDashboard /></ModuleAccessGuard>} />
+
+
               {/* App routes with layout */}
               <Route element={<AppLayout />}>
                 <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/analyze" element={<Analyze />} />
+                <Route path="/analyze" element={<ModuleAccessGuard module="snag"><Analyze /></ModuleAccessGuard>} />
                 <Route path="/analyze/gates" element={<GateRegistry />} />
                 <Route path="/analyses" element={<AnalysisHistoryPage />} />
                 <Route path="/analysis/:id" element={<AnalysisDetail />} />
