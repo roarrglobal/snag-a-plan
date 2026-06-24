@@ -270,7 +270,7 @@ export function AnalysisResults({
           </div>
 
         {/* Blind Spots */}
-        <AnalysisSection title="Blind Spots" accentColor="cobalt">
+        <AnalysisSection title="S — Surface" subtitle="The hidden assumption your team is making" accentColor="cobalt">
           <ul className="space-y-4">
             {blindSpots.map((spot, i) => (
               <li key={i} className="border-b border-[#F0F0F0] pb-3 last:border-b-0 last:pb-0">
