@@ -53,6 +53,8 @@ export async function createInProgressSession(companyInputs: CompanyInputs): Pro
       user_id: user.id,
       company_inputs: companyInputs as any,
       pillar_scores: serializeScores({} as Scores) as any,
+      binding_constraint: {} as any,
+      financial_impact: {} as any,
       status: "in_progress",
       completed: false,
     })
