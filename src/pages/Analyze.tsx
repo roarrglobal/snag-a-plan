@@ -243,34 +243,89 @@ export default function Analyze() {
 
   return (
     <>
-      <div className="min-h-screen bg-background flex flex-col">
+      <div className="min-h-screen flex flex-col" style={{ background: "#0A1628", fontFamily: "Inter, sans-serif" }}>
         {/* Header */}
-        <header className="flex items-center justify-between px-4 py-3 border-b border-border">
+        <header className="flex items-center justify-between px-4 py-3 border-b" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
           <button
             onClick={() => navigate("/")}
-            className="p-2 -ml-2 text-muted-foreground hover:text-foreground transition-colors"
+            className="p-2 -ml-2 transition-colors"
+            style={{ color: "rgba(255,255,255,0.6)" }}
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <span className="text-[18px] font-bold text-primary">Snag</span>
+          <span style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.1em", color: "#0047AB", textTransform: "uppercase" }}>
+            Nerve · SNAG
+          </span>
           <div className="w-9" />
         </header>
 
         {/* Input area */}
         <main className="flex-1 flex flex-col p-4">
-          <div className="flex-1 flex flex-col max-w-lg mx-auto w-full">
+          <div className="flex-1 flex flex-col max-w-2xl mx-auto w-full pt-6">
             {/* Usage Warning */}
             <UsageWarningBanner onUpgrade={() => navigate("/settings")} />
-            
-            <h2 className="text-[20px] font-semibold text-foreground mb-4 text-center">
-              What's your plan?
+
+            <h1
+              style={{
+                fontWeight: 300,
+                fontSize: 36,
+                letterSpacing: "-0.03em",
+                lineHeight: 1.1,
+                color: "#FFFFFF",
+                textAlign: "center",
+              }}
+            >
+              SNAG — Decision Gate
+            </h1>
+            <p
+              style={{
+                marginTop: 12,
+                fontSize: 16,
+                color: "rgba(255,255,255,0.6)",
+                textAlign: "center",
+                lineHeight: 1.5,
+              }}
+            >
+              No revenue motion proceeds without clearing the gate.
+            </p>
+
+            <h2
+              style={{
+                marginTop: 40,
+                fontSize: 18,
+                fontWeight: 500,
+                color: "#FFFFFF",
+                textAlign: "center",
+              }}
+            >
+              What revenue decision needs to be gated?
             </h2>
-            
-            <AnalysisInput onSubmit={handleAnalyze} />
-            
+
+            <div className="mt-4">
+              <AnalysisInput
+                onSubmit={handleAnalyze}
+                placeholder="e.g. We are considering changing our enterprise pricing model. No quarter has been missed yet but pipeline conversion is dropping."
+              />
+            </div>
+
+            <p
+              style={{
+                marginTop: 12,
+                fontSize: 13,
+                color: "rgba(255,255,255,0.5)",
+                lineHeight: 1.55,
+                textAlign: "center",
+              }}
+            >
+              Describe the revenue motion, decision, or commitment your team is about to make. Be specific about what is being committed and what could go wrong.
+            </p>
+
             {/* Collapsible Options */}
-            <Collapsible open={showOptions} onOpenChange={setShowOptions} className="mt-4">
-              <CollapsibleTrigger className="flex items-center justify-center gap-2 w-full py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <Collapsible open={showOptions} onOpenChange={setShowOptions} className="mt-6">
+              <CollapsibleTrigger
+                className="flex items-center justify-center gap-2 w-full py-2 text-sm transition-colors"
+                style={{ color: "rgba(255,255,255,0.6)" }}
+              >
                 {showOptions ? (
                   <>
                     <ChevronUp className="w-4 h-4" />
@@ -292,15 +347,14 @@ export default function Analyze() {
                   timeline={timeline}
                   onTimelineChange={setTimeline}
                 />
-                
-                {/* Cosmic Insights Toggle */}
+
                 {hasReadings && (
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-indigo-500/5 via-purple-500/5 to-amber-500/5 border border-primary/20">
+                  <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(0,71,171,0.3)" }}>
                     <div className="flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-primary" />
+                      <Sparkles className="w-4 h-4" style={{ color: "#0047AB" }} />
                       <div>
-                        <p className="text-sm font-medium text-foreground">Include cosmic insights</p>
-                        <p className="text-xs text-muted-foreground">Add timing guidance from your readings</p>
+                        <p className="text-sm font-medium" style={{ color: "#FFFFFF" }}>Include cosmic insights</p>
+                        <p className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>Add timing guidance from your readings</p>
                       </div>
                     </div>
                     <Switch
@@ -314,6 +368,7 @@ export default function Analyze() {
           </div>
         </main>
       </div>
+
 
       <LimitReachedModal
         open={limitModalOpen}
