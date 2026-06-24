@@ -33,6 +33,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import AnalysisDetail from "./pages/AnalysisDetail";
+import GateRegistry from "./pages/GateRegistry";
 import AnalysisHistoryPage from "./pages/AnalysisHistoryPage";
 import SettingsPage from "./pages/SettingsPage";
 import NotificationSettingsPage from "./pages/NotificationSettingsPage";
@@ -141,6 +142,7 @@ const App = () => {
               <Route element={<AppLayout />}>
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/analyze" element={<Analyze />} />
+                <Route path="/analyze/gates" element={<GateRegistry />} />
                 <Route path="/analyses" element={<AnalysisHistoryPage />} />
                 <Route path="/analysis/:id" element={<AnalysisDetail />} />
                 <Route path="/journal" element={<JournalPage />} />
