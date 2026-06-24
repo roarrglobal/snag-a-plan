@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { NerveShell } from "@/scan/NerveShell";
 import { PILLARS, CALENDLY_URL } from "@/scan/pillars";
@@ -14,6 +14,7 @@ import {
 } from "@/scan/calc";
 import { RadarPanel } from "@/scan/RadarPanel";
 import { useAuth } from "@/contexts/AuthContext";
+import { saveScanSession } from "@/lib/saveScanSession";
 
 export default function ScanResults() {
   const navigate = useNavigate();
@@ -35,6 +36,8 @@ export default function ScanResults() {
   const impact = inputs ? computeImpact(inputs) : null;
   const currency = "$";
 
+  const [saved, setSaved] = useState<boolean>(() => !!sessionStorage.getItem("nerve_scan_session_id"));
+
   useEffect(() => {
     const payload = {
       created_at: new Date().toISOString(),
@@ -49,6 +52,15 @@ export default function ScanResults() {
     } catch {}
   }, [user, inputs, scores, binding, impact]);
 
+  useEffect(() => {
+    if (!inputs || !impact) return;
+    if (sessionStorage.getItem("nerve_scan_session_id")) return;
+    saveScanSession({ companyInputs: inputs, scores, binding, impact }).then((res) => {
+      if (res) setSaved(true);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   if (!inputs) {
     return (
       <NerveShell>
@@ -61,6 +73,37 @@ export default function ScanResults() {
 
   return (
     <NerveShell>
+      {saved && (
+        <div
+          style={{
+            background: "#EFF6FF",
+            borderBottom: "1px solid rgba(0,71,171,0.2)",
+            color: "#1E3A5F",
+            fontFamily: "Inter, sans-serif",
+            fontWeight: 400,
+            fontSize: 14,
+            padding: "12px 24px",
+            width: "100%",
+          }}
+        >
+          {user ? (
+            <>
+              Your diagnostic has been saved to your account.{" "}
+              <Link to="/dashboard" style={{ color: "#0047AB", fontWeight: 500 }}>
+                View all diagnostics →
+              </Link>
+            </>
+          ) : (
+            <>
+              Save your diagnostic —{" "}
+              <Link to="/signup?module=scan" style={{ color: "#0047AB", fontWeight: 500 }}>
+                Create free account
+              </Link>{" "}
+              to access this report again and track improvement.
+            </>
+          )}
+        </div>
+      )}
       <main className="mx-auto px-6 py-10" style={{ maxWidth: 900 }}>
         <header className="mb-8">
           <h1 style={{ fontWeight: 600, fontSize: 32, letterSpacing: "-0.02em" }}>

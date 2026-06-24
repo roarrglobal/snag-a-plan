@@ -1050,6 +1050,51 @@ export type Database = {
           },
         ]
       }
+      scan_sessions: {
+        Row: {
+          binding_constraint: Json
+          company_inputs: Json
+          completed: boolean
+          created_at: string
+          financial_impact: Json
+          guest_email: string | null
+          id: string
+          pillar_scores: Json
+          snag_session_id: string | null
+          updated_at: string
+          user_id: string | null
+          zero_session_id: string | null
+        }
+        Insert: {
+          binding_constraint: Json
+          company_inputs: Json
+          completed?: boolean
+          created_at?: string
+          financial_impact: Json
+          guest_email?: string | null
+          id?: string
+          pillar_scores: Json
+          snag_session_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+          zero_session_id?: string | null
+        }
+        Update: {
+          binding_constraint?: Json
+          company_inputs?: Json
+          completed?: boolean
+          created_at?: string
+          financial_impact?: Json
+          guest_email?: string | null
+          id?: string
+          pillar_scores?: Json
+          snag_session_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+          zero_session_id?: string | null
+        }
+        Relationships: []
+      }
       shared_snags: {
         Row: {
           analysis_id: string | null
