@@ -84,7 +84,9 @@ import SharedSnagPage from "./pages/SharedSnagPage";
 import ScanDashboard from "./pages/scan/ScanDashboard";
 import ScanNew from "./pages/scan/ScanNew";
 import ScanReports from "./pages/scan/ScanReports";
-import Zero from "./pages/Zero";
+import ZeroDashboard from "./pages/zero/ZeroDashboard";
+import ZeroNew from "./pages/zero/ZeroNew";
+import ZeroResults from "./pages/zero/ZeroResults";
 
 const queryClient = new QueryClient();
 
@@ -138,7 +140,10 @@ const App = () => {
               <Route path="/scan/reports" element={<ScanReports />} />
 
               {/* ZERO belief examination module */}
-              <Route path="/zero" element={<Zero />} />
+              <Route path="/zero" element={<ZeroDashboard />} />
+              <Route path="/zero/new" element={<ZeroNew />} />
+              <Route path="/zero/:id" element={<ZeroResults />} />
+              
               
               {/* App routes with layout */}
               <Route element={<AppLayout />}>
