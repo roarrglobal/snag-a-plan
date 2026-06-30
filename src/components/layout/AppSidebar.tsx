@@ -373,22 +373,24 @@ export function AppSidebar({ open, onClose, collapsed, onToggleCollapse }: AppSi
         </div>
 
         {/* Quick Actions */}
-        <div className="p-4 border-b border-border">
-          <p className="text-caption font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-            Quick Actions
-          </p>
-          <div className="space-y-1">
-            {quickActions.map((action) => (
-              <QuickActionItem
-                key={action.href}
-                action={action}
-                isFree={isFree}
-                usage={usage}
-                onNavigate={onClose}
-              />
-            ))}
+        {quickActions.length > 0 && (
+          <div className="p-4 border-b border-border">
+            <p className="text-caption font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+              Quick Actions
+            </p>
+            <div className="space-y-1">
+              {quickActions.map((action) => (
+                <QuickActionItem
+                  key={action.href}
+                  action={action}
+                  isFree={isFree}
+                  usage={usage}
+                  onNavigate={onClose}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Navigation */}
         <nav className="flex-1 p-4 overflow-y-auto">
