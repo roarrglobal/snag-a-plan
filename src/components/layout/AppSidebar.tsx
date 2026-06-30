@@ -293,7 +293,7 @@ export function AppSidebar({ open, onClose, collapsed, onToggleCollapse }: AppSi
         )}
       >
         {/* Quick Actions */}
-        {!collapsed && (
+        {!collapsed && quickActions.length > 0 && (
           <div className="p-4 border-b border-border">
             <p className="text-caption font-semibold text-muted-foreground uppercase tracking-wider mb-3">
               Quick Actions
