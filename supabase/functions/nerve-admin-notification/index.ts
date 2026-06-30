@@ -1,5 +1,6 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
+import { buildAdminUserUrl, resolveSiteUrl } from '../_shared/site-url.ts';
 
 const ADMIN_EMAIL = 'mahesh@roarrglobal.com';
 
