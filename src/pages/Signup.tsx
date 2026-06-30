@@ -241,14 +241,13 @@ function StepOne({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-10">
         {MODULES.map((m) => {
           const isSelected = selected === m.key;
-          const disabled = m.disabled;
+          const isPulse = m.key === "pulse";
+          if (isPulse) return <PulseWaitlistCard key={m.key} m={m} />;
           return (
             <button
               key={m.key}
               type="button"
-              disabled={disabled}
-              onClick={() => !disabled && setSelected(m.key)}
-              title={disabled ? "Pulse launches soon. Select another module to get started." : undefined}
+              onClick={() => setSelected(m.key)}
               style={{
                 position: "relative",
                 textAlign: "left",
@@ -256,8 +255,7 @@ function StepOne({
                 borderRadius: 10,
                 border: isSelected ? `2px solid ${COBALT}` : `1px solid ${BORDER}`,
                 background: isSelected ? "rgba(0,71,171,0.1)" : CARD,
-                cursor: disabled ? "default" : "pointer",
-                opacity: disabled ? 0.5 : 1,
+                cursor: "pointer",
                 transition: "all 150ms",
                 color: "white",
               }}
