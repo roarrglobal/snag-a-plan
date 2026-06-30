@@ -170,32 +170,32 @@ const App = () => {
                 <Route path="/analyze/gates" element={<ModuleAccessGuard module="snag"><GateRegistry /></ModuleAccessGuard>} />
                 <Route path="/analyses" element={<AnalysisHistoryPage />} />
                 <Route path="/analysis/:id" element={<AnalysisDetail />} />
-                <Route path="/journal" element={<JournalPage />} />
-                <Route path="/journal/new" element={<JournalNewPage />} />
-                <Route path="/journal/:id" element={<JournalDetailPage />} />
-                <Route path="/decisions" element={<DecisionsPage />} />
-                <Route path="/decisions/new" element={<DecisionNewPage />} />
-                <Route path="/decisions/:id" element={<DecisionDetailPage />} />
-                <Route path="/decisions/:id/outcome" element={<DecisionOutcomePage />} />
-                <Route path="/post-mortem" element={<PostMortemPage />} />
-                <Route path="/post-mortem/new" element={<PostMortemNewPage />} />
-                <Route path="/post-mortem/:id" element={<PostMortemDetailPage />} />
-                <Route path="/quick-retro" element={<QuickRetroPage />} />
-                <Route path="/habits" element={<HabitsPage />} />
-                <Route path="/frameworks" element={<FrameworksPage />} />
-                <Route path="/frameworks/swot/:id" element={<SwotAnalysisPage />} />
-                <Route path="/frameworks/porter/:id" element={<PorterAnalysisPage />} />
-                <Route path="/frameworks/premortem/:id" element={<PremortemAnalysisPage />} />
+                <Route path="/journal" element={<LegacySurfaceGuard><JournalPage /></LegacySurfaceGuard>} />
+                <Route path="/journal/new" element={<LegacySurfaceGuard><JournalNewPage /></LegacySurfaceGuard>} />
+                <Route path="/journal/:id" element={<LegacySurfaceGuard><JournalDetailPage /></LegacySurfaceGuard>} />
+                <Route path="/decisions" element={<LegacySurfaceGuard><DecisionsPage /></LegacySurfaceGuard>} />
+                <Route path="/decisions/new" element={<LegacySurfaceGuard><DecisionNewPage /></LegacySurfaceGuard>} />
+                <Route path="/decisions/:id" element={<LegacySurfaceGuard><DecisionDetailPage /></LegacySurfaceGuard>} />
+                <Route path="/decisions/:id/outcome" element={<LegacySurfaceGuard><DecisionOutcomePage /></LegacySurfaceGuard>} />
+                <Route path="/post-mortem" element={<LegacySurfaceGuard><PostMortemPage /></LegacySurfaceGuard>} />
+                <Route path="/post-mortem/new" element={<LegacySurfaceGuard><PostMortemNewPage /></LegacySurfaceGuard>} />
+                <Route path="/post-mortem/:id" element={<LegacySurfaceGuard><PostMortemDetailPage /></LegacySurfaceGuard>} />
+                <Route path="/quick-retro" element={<LegacySurfaceGuard><QuickRetroPage /></LegacySurfaceGuard>} />
+                <Route path="/habits" element={<LegacySurfaceGuard><HabitsPage /></LegacySurfaceGuard>} />
+                <Route path="/frameworks" element={<LegacySurfaceGuard><FrameworksPage /></LegacySurfaceGuard>} />
+                <Route path="/frameworks/swot/:id" element={<LegacySurfaceGuard><SwotAnalysisPage /></LegacySurfaceGuard>} />
+                <Route path="/frameworks/porter/:id" element={<LegacySurfaceGuard><PorterAnalysisPage /></LegacySurfaceGuard>} />
+                <Route path="/frameworks/premortem/:id" element={<LegacySurfaceGuard><PremortemAnalysisPage /></LegacySurfaceGuard>} />
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/settings/notifications" element={<NotificationSettingsPage />} />
                 <Route path="/profile" element={<ProfileSettings />} />
                 <Route path="/reports" element={<ReportsPage />} />
-                <Route path="/reading/:id" element={<ReadingPage />} />
+                <Route path="/reading/:id" element={<LegacySurfaceGuard><ReadingPage /></LegacySurfaceGuard>} />
               </Route>
               
               {/* Team routes */}
-              <Route path="/team/new" element={<TeamNewPage />} />
-              <Route path="/team/:slug" element={<TeamLayout />}>
+              <Route path="/team/new" element={<LegacySurfaceGuard><TeamNewPage /></LegacySurfaceGuard>} />
+              <Route path="/team/:slug" element={<LegacySurfaceGuard><TeamLayout /></LegacySurfaceGuard>}>
                 <Route path="dashboard" element={<TeamDashboardPage />} />
                 <Route path="members" element={<TeamMembersPage />} />
                 <Route path="settings" element={<TeamSettingsPage />} />
