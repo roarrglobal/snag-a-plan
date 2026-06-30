@@ -103,10 +103,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return data;
   };
 
-  const loadNerve = useCallback(async (userId: string) => {
+  const loadNerve = useCallback(async (userId: string, authUser?: User | null) => {
     const [np, ma] = await Promise.all([fetchNerveProfile(userId), fetchModuleAccess(userId)]);
     setNerveProfile(np);
     setModuleAccess(ma);
+
+    // Fire-and-forget: notify admin once after email-confirmed signup,
+    // even if the user never reaches the intake form.
+    if (np && !np.signup_notified_at && authUser?.email_confirmed_at) {
+      supabase.functions
+        .invoke("nerve-admin-notification", {
+          body: { trigger: "signup", user_id: userId },
+        })
+        .catch((err) => console.warn("nerve-admin-notification (signup) failed", err));
+    }
   }, []);
 
   const refreshNerveAccess = useCallback(async () => {
