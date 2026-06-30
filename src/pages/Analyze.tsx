@@ -101,7 +101,7 @@ export default function Analyze() {
       (async () => {
         const { data: z } = await supabase
           .from("zero_sessions")
-          .select("overall_verdict, decision_text, stage1_data, stage3_data, scan_session_id")
+          .select("overall_verdict, decision_text, stage1_register, stage3_inversion, scan_session_id, belief_statement")
           .eq("id", zeroId)
           .maybeSingle();
         if (!z) return;
@@ -117,10 +117,12 @@ export default function Analyze() {
           if (bc?.pillar_name) pillarLabel = `the ${bc.pillar_name} constraint`;
         }
 
-        const beliefs = (z.stage1_data as any)?.beliefs || (z.stage1_data as any)?.items || [];
-        const primaryBelief = beliefs[0]?.belief || beliefs[0]?.text || z.decision_text || "(belief not captured)";
-        const stage3 = (z.stage3_data as any)?.items || (z.stage3_data as any) || [];
-        const firstResponse = Array.isArray(stage3) ? stage3[0]?.response : stage3?.response;
+        const beliefs = (z.stage1_register as any)?.beliefs || (z.stage1_register as any)?.items || [];
+        const primaryBelief =
+          beliefs[0]?.belief || beliefs[0]?.text || z.belief_statement || z.decision_text || "(belief not captured)";
+        const stage3Raw: any = z.stage3_inversion;
+        const stage3Items = stage3Raw?.items || stage3Raw || [];
+        const firstResponse = Array.isArray(stage3Items) ? stage3Items[0]?.response : stage3Items?.response;
         const responseText = firstResponse || "(no response recorded)";
 
         const verdict = z.overall_verdict || "indeterminate";
