@@ -177,14 +177,81 @@ const getNavItems = (userType: string): NavItem[] => {
   ];
 };
 
+const NERVE_MODULE_ICON: Record<string, React.ReactNode> = {
+  pulse: <Radar className="w-4 h-4" />,
+  scan: <ScanLine className="w-4 h-4" />,
+  zero: <CircleDashed className="w-4 h-4" />,
+  snag: <ShieldCheck className="w-4 h-4" />,
+};
+
+const NERVE_MODULE_LABEL: Record<string, string> = {
+  pulse: "Pulse",
+  scan: "Scan",
+  zero: "ZERO",
+  snag: "SNAG",
+};
+
+function getNerveNavItems(modules: string[]): NavItem[] {
+  const items: NavItem[] = [
+    { label: "Dashboard", href: "/dashboard", icon: <Home className="w-4 h-4" /> },
+  ];
+  // Preserve the canonical Nerve module order regardless of activation order.
+  const order = ["pulse", "scan", "zero", "snag"];
+  for (const mod of order) {
+    if (!modules.includes(mod)) continue;
+    if (mod === "scan") {
+      items.push({
+        label: "Scan",
+        href: "/scan",
+        icon: NERVE_MODULE_ICON.scan,
+        children: [
+          { label: "New Scan", href: "/scan/new", icon: <Plus className="w-4 h-4" /> },
+          { label: "Reports", href: "/scan/reports", icon: <BarChart3 className="w-4 h-4" /> },
+        ],
+      });
+    } else if (mod === "zero") {
+      items.push({
+        label: "ZERO",
+        href: "/zero",
+        icon: NERVE_MODULE_ICON.zero,
+        children: [
+          { label: "New examination", href: "/zero/new", icon: <Plus className="w-4 h-4" /> },
+          { label: "History", href: "/zero", icon: <List className="w-4 h-4" /> },
+        ],
+      });
+    } else if (mod === "snag") {
+      items.push({
+        label: "SNAG",
+        href: "/analyze",
+        icon: NERVE_MODULE_ICON.snag,
+        children: [
+          { label: "Decision Gate", href: "/analyze", icon: <ShieldCheck className="w-4 h-4" /> },
+          { label: "Gate Registry", href: "/analyze/gates", icon: <List className="w-4 h-4" /> },
+        ],
+      });
+    } else if (mod === "pulse") {
+      items.push({
+        label: "Pulse",
+        href: "/pulse",
+        icon: NERVE_MODULE_ICON.pulse,
+      });
+    }
+  }
+  items.push({ label: "Profile", href: "/profile", icon: <Users className="w-4 h-4" /> });
+  items.push({ label: "Settings", href: "/settings", icon: <Settings className="w-4 h-4" /> });
+  return items;
+}
+
 export function AppSidebar({ open, onClose, collapsed, onToggleCollapse }: AppSidebarProps) {
   const location = useLocation();
   const { isFree, hasProFeatures, hasTeamFeatures } = useTierCheck();
   const { usage } = useUsage();
-  const { profile } = useAuth();
+  const { profile, moduleAccess } = useAuth();
   const userType = profile?.user_type || "individual";
-  const quickActions = getQuickActions(userType);
-  const navItems = getNavItems(userType);
+  const isNerveUser = (moduleAccess?.length ?? 0) > 0;
+  const nerveModules = (moduleAccess ?? []).map((m) => m.module as string);
+  const quickActions = isNerveUser ? [] : getQuickActions(userType);
+  const navItems = isNerveUser ? getNerveNavItems(nerveModules) : getNavItems(userType);
 
   const isActive = (href: string) => {
     if (href === "/dashboard") return location.pathname === "/dashboard";
@@ -226,7 +293,7 @@ export function AppSidebar({ open, onClose, collapsed, onToggleCollapse }: AppSi
         )}
       >
         {/* Quick Actions */}
-        {!collapsed && (
+        {!collapsed && quickActions.length > 0 && (
           <div className="p-4 border-b border-border">
             <p className="text-caption font-semibold text-muted-foreground uppercase tracking-wider mb-3">
               Quick Actions
@@ -306,22 +373,24 @@ export function AppSidebar({ open, onClose, collapsed, onToggleCollapse }: AppSi
         </div>
 
         {/* Quick Actions */}
-        <div className="p-4 border-b border-border">
-          <p className="text-caption font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-            Quick Actions
-          </p>
-          <div className="space-y-1">
-            {quickActions.map((action) => (
-              <QuickActionItem
-                key={action.href}
-                action={action}
-                isFree={isFree}
-                usage={usage}
-                onNavigate={onClose}
-              />
-            ))}
+        {quickActions.length > 0 && (
+          <div className="p-4 border-b border-border">
+            <p className="text-caption font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+              Quick Actions
+            </p>
+            <div className="space-y-1">
+              {quickActions.map((action) => (
+                <QuickActionItem
+                  key={action.href}
+                  action={action}
+                  isFree={isFree}
+                  usage={usage}
+                  onNavigate={onClose}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Navigation */}
         <nav className="flex-1 p-4 overflow-y-auto">
