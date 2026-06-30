@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ShieldCheck, ScanLine, CircleDashed, Radar } from "lucide-react";
 import { MODULE_META, type NerveModule } from "@/lib/nerveAccess";
-import ActiveGatesWidget from "@/components/dashboard/ActiveGatesWidget";
+import { ActiveGatesWidget } from "@/components/dashboard/ActiveGatesWidget";
 
 const ICONS: Record<NerveModule, JSX.Element> = {
   pulse: <Radar className="w-5 h-5" />,
