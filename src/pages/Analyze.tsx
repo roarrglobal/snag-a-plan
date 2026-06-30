@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import { ArrowLeft, ChevronDown, ChevronUp, Sparkles } from "lucide-react";
 import { AnalysisInput } from "@/components/AnalysisInput";
 import { AnalysisLoading } from "@/components/analysis/AnalysisLoading";

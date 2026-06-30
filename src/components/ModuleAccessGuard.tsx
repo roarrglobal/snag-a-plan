@@ -20,6 +20,11 @@ export function ModuleAccessGuard({ module, children }: Props) {
 
   const meta = MODULE_META[module];
 
+  // Pulse is not yet a product. Always show waitlist; never allow access requests.
+  if (module === "pulse") {
+    return <PulseWaitlistState />;
+  }
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
