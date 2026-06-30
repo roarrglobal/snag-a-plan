@@ -850,6 +850,7 @@ export type Database = {
           notes: string | null
           onboarding_status: string
           primary_module: string | null
+          signup_notified_at: string | null
           team_size: string | null
           unread_admin_notifications: number
           updated_at: string
@@ -865,6 +866,7 @@ export type Database = {
           notes?: string | null
           onboarding_status?: string
           primary_module?: string | null
+          signup_notified_at?: string | null
           team_size?: string | null
           unread_admin_notifications?: number
           updated_at?: string
@@ -880,6 +882,7 @@ export type Database = {
           notes?: string | null
           onboarding_status?: string
           primary_module?: string | null
+          signup_notified_at?: string | null
           team_size?: string | null
           unread_admin_notifications?: number
           updated_at?: string

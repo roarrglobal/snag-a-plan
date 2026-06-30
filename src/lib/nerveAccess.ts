@@ -46,6 +46,7 @@ export interface NerveUserProfile {
   onboarding_status: "pending_review" | "intake_scheduled" | "intake_complete" | "active" | "suspended";
   is_admin: boolean;
   notes: string | null;
+  signup_notified_at: string | null;
   created_at: string;
   updated_at: string;
 }
