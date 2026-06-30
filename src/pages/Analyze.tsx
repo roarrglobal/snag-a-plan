@@ -249,6 +249,8 @@ export default function Analyze() {
         result: JSON.parse(JSON.stringify(result)),
         title: input.slice(0, 100),
         category: selectedCategory,
+        source_module: zeroSourceId ? "zero" : null,
+        source_session_id: zeroSourceId,
       }]);
 
       if (error) {
@@ -348,8 +350,26 @@ export default function Analyze() {
               What revenue decision needs to be gated?
             </h2>
 
+            {zeroBanner && (
+              <div
+                style={{
+                  marginTop: 16,
+                  padding: 14,
+                  border: "1px solid rgba(190,52,85,0.45)",
+                  background: "rgba(190,52,85,0.08)",
+                  borderRadius: 8,
+                  fontSize: 13,
+                  color: "rgba(255,255,255,0.85)",
+                  textAlign: "left",
+                }}
+              >
+                Pre-populated from your ZERO examination — Verdict: <strong style={{ color: "#FECDD3" }}>{zeroBanner.verdict}</strong>
+              </div>
+            )}
+
             <div className="mt-4">
               <AnalysisInput
+                key={input}
                 onSubmit={handleAnalyze}
                 placeholder="e.g. We are considering changing our enterprise pricing model. No quarter has been missed yet but pipeline conversion is dropping."
               />
