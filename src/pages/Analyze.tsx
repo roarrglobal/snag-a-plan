@@ -19,6 +19,7 @@ import { Switch } from "@/components/ui/switch";
 export default function Analyze() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
   const { toast } = useToast();
   const { user } = useAuth();
   const { canUseFeature, tier, refetch: refetchUsage } = useUsage();
@@ -29,6 +30,9 @@ export default function Analyze() {
   const [limitModalOpen, setLimitModalOpen] = useState(false);
   const [waitlistModalOpen, setWaitlistModalOpen] = useState(false);
   const [sourceJournalId, setSourceJournalId] = useState<string | null>(null);
+  const [zeroSourceId, setZeroSourceId] = useState<string | null>(null);
+  const [zeroBanner, setZeroBanner] = useState<{ verdict: string } | null>(null);
+  
   
   // New selector states
   const [category, setCategory] = useState("other");
@@ -90,6 +94,47 @@ export default function Analyze() {
       }
     }
     
+    // ZERO → SNAG handoff: pre-populate from a completed ZERO session.
+    const zeroId = searchParams.get("zero_session_id");
+    if (zeroId && !state?.prefillContent) {
+      setZeroSourceId(zeroId);
+      (async () => {
+        const { data: z } = await supabase
+          .from("zero_sessions")
+          .select("overall_verdict, decision_text, stage1_data, stage3_data, scan_session_id")
+          .eq("id", zeroId)
+          .maybeSingle();
+        if (!z) return;
+
+        let pillarLabel = "this examination";
+        if (z.scan_session_id) {
+          const { data: scan } = await supabase
+            .from("scan_sessions")
+            .select("binding_constraint")
+            .eq("id", z.scan_session_id)
+            .maybeSingle();
+          const bc: any = scan?.binding_constraint;
+          if (bc?.pillar_name) pillarLabel = `the ${bc.pillar_name} constraint`;
+        }
+
+        const beliefs = (z.stage1_data as any)?.beliefs || (z.stage1_data as any)?.items || [];
+        const primaryBelief = beliefs[0]?.belief || beliefs[0]?.text || z.decision_text || "(belief not captured)";
+        const stage3 = (z.stage3_data as any)?.items || (z.stage3_data as any) || [];
+        const firstResponse = Array.isArray(stage3) ? stage3[0]?.response : stage3?.response;
+        const responseText = firstResponse || "(no response recorded)";
+
+        const verdict = z.overall_verdict || "indeterminate";
+        const prefill =
+          `Our team is examining a decision related to ${pillarLabel}. ZERO examination returned verdict: ${verdict}. ` +
+          `The belief examined: ${primaryBelief}. ` +
+          `Response to the adversarial question: ${responseText}.`;
+
+        setInput(prefill);
+        setZeroBanner({ verdict });
+      })();
+      return;
+    }
+
     // Check for stored input from landing page
     const storedInput = sessionStorage.getItem("snag_input");
     if (storedInput && !state?.prefillContent) {
@@ -98,7 +143,7 @@ export default function Analyze() {
       // Auto-start analysis
       handleAnalyze(storedInput);
     }
-  }, [location]);
+  }, [location, searchParams]);
 
   const handleAnalyze = async (text: string) => {
     // Check soft launch limit first

@@ -174,3 +174,59 @@ function UnauthGate({ module, redirect }: { module: NerveModule; redirect: strin
     </div>
   );
 }
+
+function PulseWaitlistState() {
+  const meta = MODULE_META.pulse;
+  const [email, setEmail] = useState("");
+  const [done, setDone] = useState(false);
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+    try {
+      const existing = JSON.parse(localStorage.getItem("nerve_pulse_waitlist") || "[]");
+      existing.push({ email: email.trim(), at: new Date().toISOString() });
+      localStorage.setItem("nerve_pulse_waitlist", JSON.stringify(existing));
+    } catch {}
+    setDone(true);
+  };
+
+  return (
+    <div className="min-h-screen bg-white flex flex-col items-center px-8 py-20">
+      <div className="w-full max-w-[560px] text-center">
+        <span
+          className="inline-block text-[11px] font-semibold uppercase tracking-[0.2em] px-3 py-1 rounded-full mb-6"
+          style={{ color: meta.color, border: `1px solid ${meta.color}40`, background: meta.light }}
+        >
+          {meta.label}
+        </span>
+        <h1 className="text-[32px] font-light leading-tight" style={{ color: "#0A1628" }}>
+          Pulse launches soon.
+        </h1>
+        <p className="mt-5 text-[16px] text-[#6B7280] max-w-[440px] mx-auto leading-relaxed">
+          Continuous revenue monitoring. Pipeline hygiene, deal decay, manager coaching signals — daily. Join the waitlist to be notified when Pulse opens.
+        </p>
+        {done ? (
+          <p className="mt-10 text-[14px]" style={{ color: meta.color }}>
+            You're on the waitlist. We'll email you when Pulse goes live.
+          </p>
+        ) : (
+          <form onSubmit={submit} className="mt-10 flex flex-col sm:flex-row gap-3 justify-center max-w-[420px] mx-auto">
+            <input
+              type="email"
+              value={email}
+              required
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@company.com"
+              className="flex-1 px-4 py-3 rounded-md border outline-none"
+              style={{ borderColor: `${meta.color}40` }}
+            />
+            <button type="submit" className="px-5 py-3 rounded-md font-medium text-white" style={{ background: meta.color }}>
+              Join waitlist →
+            </button>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+}
