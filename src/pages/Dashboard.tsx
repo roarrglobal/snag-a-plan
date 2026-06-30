@@ -57,8 +57,15 @@ const CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
 import NerveDashboard from "./NerveDashboard";
 
 export default function Dashboard() {
+  const { moduleAccess, isLoading: authLoading } = useAuth();
+  if (authLoading) return null;
+  if ((moduleAccess?.length ?? 0) > 0) return <NerveDashboard />;
+  return <LegacyDashboard />;
+}
+
+function LegacyDashboard() {
   const navigate = useNavigate();
-  const { user, isLoading: authLoading, profile, moduleAccess } = useAuth();
+  const { user, isLoading: authLoading, profile } = useAuth();
   const { toast } = useToast();
   usePendingInvitations();
   const [analyses, setAnalyses] = useState<SavedAnalysis[]>([]);
