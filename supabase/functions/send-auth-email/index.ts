@@ -9,6 +9,7 @@ import {
   smallText,
   passwordResetEmail,
 } from "../_shared/email-templates.ts";
+import { buildAuthConfirmUrl, resolveSiteUrl } from "../_shared/site-url.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -35,11 +36,13 @@ serve(async (req) => {
     const tokenHash = payload.token_hash || "";
     const redirectTo = payload.redirect_to || "";
 
-    // Build the actual confirmation URL
+    // Build the actual confirmation URL using the validated site origin.
+    const site = resolveSiteUrl(req);
+    if (site.warnings.length) console.warn("send-auth-email site resolution:", site.warnings);
+
     let actionUrl = confirmationUrl;
     if (!actionUrl && tokenHash) {
-      const siteUrl = Deno.env.get("SITE_URL") || "https://snagme.app";
-      actionUrl = `${siteUrl}/auth/confirm?token_hash=${tokenHash}&type=${emailType}`;
+      actionUrl = buildAuthConfirmUrl(site.origin, tokenHash, emailType);
     }
 
     console.log(`Auth email hook: type=${emailType}, to=${email}`);

@@ -1,5 +1,6 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
+import { buildAdminUserUrl, resolveSiteUrl } from '../_shared/site-url.ts';
 
 const ADMIN_EMAIL = 'mahesh@roarrglobal.com';
 
@@ -78,6 +79,10 @@ Deno.serve(async (req) => {
     const subjectPrefix = trigger === 'signup' ? 'New signup' : 'New access request';
     const subject = `Nerve — ${subjectPrefix}: ${payload.module ?? 'unknown'} — ${payload.company_name ?? ''}`.trim();
 
+    const site = resolveSiteUrl(req);
+    if (site.warnings.length) console.warn('nerve-admin-notification site resolution:', site.warnings);
+    const adminLink = buildAdminUserUrl(site.origin, payload.user_id ?? '');
+
     const text = `${trigger === 'signup' ? 'A new user just completed signup.' : 'New access request received.'}
 
 User: ${payload.full_name ?? ''}
@@ -92,7 +97,7 @@ Their situation:
 ${payload.current_situation ?? ''}
 
 Review in admin panel:
-${new URL(req.url).origin.replace('/functions/v1', '')}/admin/users/${payload.user_id ?? ''}
+${adminLink}
 `;
 
     const res = await fetch('https://api.resend.com/emails', {
