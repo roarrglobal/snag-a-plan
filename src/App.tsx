@@ -167,7 +167,7 @@ const App = () => {
               <Route element={<AppLayout />}>
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/analyze" element={<ModuleAccessGuard module="snag"><Analyze /></ModuleAccessGuard>} />
-                <Route path="/analyze/gates" element={<GateRegistry />} />
+                <Route path="/analyze/gates" element={<ModuleAccessGuard module="snag"><GateRegistry /></ModuleAccessGuard>} />
                 <Route path="/analyses" element={<AnalysisHistoryPage />} />
                 <Route path="/analysis/:id" element={<AnalysisDetail />} />
                 <Route path="/journal" element={<JournalPage />} />
