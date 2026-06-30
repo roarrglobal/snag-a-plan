@@ -91,6 +91,7 @@ import PulseDashboard from "./pages/pulse/PulseDashboard";
 import Onboarding from "./pages/Onboarding";
 import Pending from "./pages/Pending";
 import { ModuleAccessGuard } from "./components/ModuleAccessGuard";
+import { LegacySurfaceGuard } from "./components/LegacySurfaceGuard";
 import AdminGuard from "./components/AdminGuard";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminOverview from "./pages/admin/AdminOverview";
