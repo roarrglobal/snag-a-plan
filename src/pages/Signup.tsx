@@ -241,14 +241,13 @@ function StepOne({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-10">
         {MODULES.map((m) => {
           const isSelected = selected === m.key;
-          const disabled = m.disabled;
+          const isPulse = m.key === "pulse";
+          if (isPulse) return <PulseWaitlistCard key={m.key} m={m} />;
           return (
             <button
               key={m.key}
               type="button"
-              disabled={disabled}
-              onClick={() => !disabled && setSelected(m.key)}
-              title={disabled ? "Pulse launches soon. Select another module to get started." : undefined}
+              onClick={() => setSelected(m.key)}
               style={{
                 position: "relative",
                 textAlign: "left",
@@ -256,8 +255,7 @@ function StepOne({
                 borderRadius: 10,
                 border: isSelected ? `2px solid ${COBALT}` : `1px solid ${BORDER}`,
                 background: isSelected ? "rgba(0,71,171,0.1)" : CARD,
-                cursor: disabled ? "default" : "pointer",
-                opacity: disabled ? 0.5 : 1,
+                cursor: "pointer",
                 transition: "all 150ms",
                 color: "white",
               }}
@@ -497,6 +495,83 @@ function Field({
         }}
       />
       {helper && <p style={{ color: SUBTLE, fontSize: 11.5, marginTop: 4 }}>{helper}</p>}
+    </div>
+  );
+}
+
+function PulseWaitlistCard({ m }: { m: ModuleDef }) {
+  const PULSE_TEAL = "#0D9488";
+  const [email, setEmail] = useState("");
+  const [done, setDone] = useState(false);
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+    try {
+      const existing = JSON.parse(localStorage.getItem("nerve_pulse_waitlist") || "[]");
+      existing.push({ email: email.trim(), at: new Date().toISOString(), source: "signup" });
+      localStorage.setItem("nerve_pulse_waitlist", JSON.stringify(existing));
+    } catch {}
+    setDone(true);
+  };
+  return (
+    <div
+      style={{
+        position: "relative",
+        textAlign: "left",
+        padding: 24,
+        borderRadius: 10,
+        border: `1px solid rgba(13,148,136,0.3)`,
+        background: "rgba(13,148,136,0.04)",
+        color: "white",
+      }}
+    >
+      <div style={{ color: PULSE_TEAL, fontSize: 11, letterSpacing: "0.2em", fontWeight: 600 }}>{m.tag}</div>
+      <div style={{ marginTop: 12, color: PULSE_TEAL }}>
+        <m.Icon size={28} />
+      </div>
+      <h3 style={{ fontSize: 17, fontWeight: 500, marginTop: 14, lineHeight: 1.35 }}>{m.headline}</h3>
+      <p style={{ color: SUBTLE, fontSize: 13.5, lineHeight: 1.55, marginTop: 10 }}>{m.body}</p>
+      {done ? (
+        <p style={{ marginTop: 16, color: PULSE_TEAL, fontSize: 12.5, fontWeight: 500 }}>
+          You're on the waitlist. We'll email you when Pulse opens.
+        </p>
+      ) : (
+        <form onSubmit={submit} style={{ marginTop: 16, display: "flex", gap: 8 }}>
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@company.com"
+            style={{
+              flex: 1,
+              padding: "8px 12px",
+              borderRadius: 6,
+              border: `1px solid rgba(13,148,136,0.4)`,
+              background: "transparent",
+              color: "white",
+              fontSize: 13,
+              outline: "none",
+            }}
+          />
+          <button
+            type="submit"
+            style={{
+              padding: "8px 14px",
+              borderRadius: 6,
+              border: "none",
+              background: PULSE_TEAL,
+              color: "white",
+              fontWeight: 500,
+              fontSize: 12.5,
+              cursor: "pointer",
+              whiteSpace: "nowrap",
+            }}
+          >
+            Join waitlist →
+          </button>
+        </form>
+      )}
     </div>
   );
 }

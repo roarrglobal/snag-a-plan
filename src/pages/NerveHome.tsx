@@ -1085,9 +1085,9 @@ export default function NerveHome() {
               tier="Execution Governance"
               headline="Monitors revenue health daily"
               body="Pipeline hygiene scoring, CRM integrity enforcement, deal decay alerts, and manager coaching signals. Pulse tells you what behavior is creating risk right now — not what happened last quarter."
-              cta="Learn more"
-              tag="Continuous monitoring"
-              onClick={() => navigate("/pulse")}
+              cta="Join waitlist →"
+              tag="Launching soon"
+              onClick={() => setWaitlistOpen(true)}
             />
           </Reveal>
           <Reveal delay={0.1}>

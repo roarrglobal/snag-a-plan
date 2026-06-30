@@ -119,7 +119,7 @@ export function ScanResultsView({ session }: Props) {
           >
             <h3 style={{ fontWeight: 600, fontSize: 14, color: "#0A1628" }}>Next steps</h3>
             <div style={{ marginTop: 16, display: "flex", flexDirection: "column", gap: 12 }}>
-              <Link to="/zero" style={nextStepLink}>
+              <Link to={`/zero/new?scan_session_id=${session.id}`} style={nextStepLink}>
                 <div style={{ fontWeight: 600, fontSize: 13, color: "#D97706" }}>Examine load-bearing beliefs →</div>
                 <div style={{ fontSize: 12, color: "#6B7280", marginTop: 4 }}>Run ZERO on the constraint above.</div>
               </Link>
