@@ -169,8 +169,8 @@ const App = () => {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/analyze" element={<ModuleAccessGuard module="snag"><Analyze /></ModuleAccessGuard>} />
                 <Route path="/analyze/gates" element={<ModuleAccessGuard module="snag"><GateRegistry /></ModuleAccessGuard>} />
-                <Route path="/analyses" element={<AnalysisHistoryPage />} />
-                <Route path="/analysis/:id" element={<AnalysisDetail />} />
+                <Route path="/analyses" element={<LegacySurfaceGuard><AnalysisHistoryPage /></LegacySurfaceGuard>} />
+                <Route path="/analysis/:id" element={<LegacySurfaceGuard><AnalysisDetail /></LegacySurfaceGuard>} />
                 <Route path="/journal" element={<LegacySurfaceGuard><JournalPage /></LegacySurfaceGuard>} />
                 <Route path="/journal/new" element={<LegacySurfaceGuard><JournalNewPage /></LegacySurfaceGuard>} />
                 <Route path="/journal/:id" element={<LegacySurfaceGuard><JournalDetailPage /></LegacySurfaceGuard>} />
