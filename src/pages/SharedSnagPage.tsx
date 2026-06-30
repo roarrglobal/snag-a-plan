@@ -34,8 +34,8 @@ export default function SharedSnagPage() {
       return;
     }
 
-    // Increment view count
-    await supabase.rpc("increment_share_view", { p_short_code: shortCode });
+    // Increment view count (rate-limited server-side by IP)
+    supabase.functions.invoke("share-view", { body: { short_code: shortCode } }).catch(() => {});
 
     setData(shared);
     setLoading(false);
