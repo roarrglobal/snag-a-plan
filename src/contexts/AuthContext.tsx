@@ -120,7 +120,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const refreshNerveAccess = useCallback(async () => {
-    if (user) await loadNerve(user.id);
+    if (user) await loadNerve(user.id, user);
   }, [user, loadNerve]);
 
   const refreshProfile = async () => {
@@ -139,7 +139,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setTimeout(async () => {
           const profileData = await fetchProfile(session.user.id);
           setProfile(profileData);
-          loadNerve(session.user.id);
+          loadNerve(session.user.id, session.user);
         }, 0);
       } else {
         setProfile(null);
@@ -156,7 +156,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (session?.user) {
         fetchProfile(session.user.id).then(setProfile);
-        loadNerve(session.user.id);
+        loadNerve(session.user.id, session.user);
       }
 
       setIsLoading(false);
