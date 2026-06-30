@@ -54,9 +54,11 @@ const CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
   other: { bg: "bg-muted", text: "text-muted-foreground" },
 };
 
+import NerveDashboard from "./NerveDashboard";
+
 export default function Dashboard() {
   const navigate = useNavigate();
-  const { user, isLoading: authLoading, profile } = useAuth();
+  const { user, isLoading: authLoading, profile, moduleAccess } = useAuth();
   const { toast } = useToast();
   usePendingInvitations();
   const [analyses, setAnalyses] = useState<SavedAnalysis[]>([]);
