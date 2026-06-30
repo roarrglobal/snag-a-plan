@@ -94,14 +94,26 @@ serve(async (req) => {
       return `Someone just snagged ${categoryLabels[a.category || "other"] || "a decision"}`;
     });
 
+    // Round counts down to the nearest 50 / 10 to avoid exposing exact volume
+    const roundDown = (n: number, step: number) => Math.floor(n / step) * step;
+    const safeTotal = roundDown(totalCount || 0, 50);
+    const safeRecent = roundDown(recentCount || 0, 10);
+
     return new Response(
       JSON.stringify({
-        totalCount: totalCount || 0,
+        totalCount: safeTotal,
         categoryPercentages,
-        recentCount: recentCount || 0,
-        recentActivities: recentActivityTexts,
+        recentCount: safeRecent,
+        // cap to 5 generic items; no timestamps leaked
+        recentActivities: recentActivityTexts.slice(0, 5),
       }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      {
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json",
+          "Cache-Control": "public, max-age=60, s-maxage=60",
+        },
+      }
     );
   } catch (error) {
     console.error("Error in get-public-stats:", error);
