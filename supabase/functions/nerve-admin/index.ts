@@ -147,7 +147,9 @@ Deno.serve(async (req) => {
     const body = req.method === "GET" ? {} : await req.json().catch(() => ({}));
     const action = (body?.action ?? "fetch") as string;
 
-    const origin = req.headers.get("origin") ?? "https://snagme.app";
+    const site = resolveSiteUrl(req);
+    if (site.warnings.length) console.warn("nerve-admin site resolution:", site.warnings);
+    const origin = site.origin;
 
     async function fetchEmail(uid: string): Promise<string | null> {
       const { data } = await admin.auth.admin.getUserById(uid);
