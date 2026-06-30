@@ -9,6 +9,7 @@ import {
   smallText,
   passwordResetEmail,
 } from "../_shared/email-templates.ts";
+import { buildAuthConfirmUrl, resolveSiteUrl } from "../_shared/site-url.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
