@@ -23,8 +23,10 @@ serve(async (req) => {
       });
     }
 
-    // Verify JWT
-    const secret = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    // Verify JWT with dedicated quick-outcome secret (separate from service role key)
+    const secret =
+      Deno.env.get("QUICK_OUTCOME_SECRET") ||
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const key = await crypto.subtle.importKey(
       "raw",
       new TextEncoder().encode(secret),
