@@ -9,7 +9,9 @@ const corsHeaders = {
 };
 
 async function createQuickOutcomeToken(userId: string, decisionId: string, teamId: string): Promise<string> {
-  const secret = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const secret =
+    Deno.env.get("QUICK_OUTCOME_SECRET") ||
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const key = await crypto.subtle.importKey(
     "raw",
     new TextEncoder().encode(secret),
@@ -17,14 +19,14 @@ async function createQuickOutcomeToken(userId: string, decisionId: string, teamI
     false,
     ["sign", "verify"]
   );
-  
+
   const payload = {
     user_id: userId,
     decision_id: decisionId,
     team_id: teamId,
-    exp: djwt.getNumericDate(7 * 24 * 60 * 60), // 7 days
+    exp: djwt.getNumericDate(72 * 60 * 60), // 72 hours
   };
-  
+
   return await djwt.create({ alg: "HS256", typ: "JWT" }, payload, key);
 }
 

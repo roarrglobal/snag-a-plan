@@ -1251,6 +1251,27 @@ export type Database = {
         }
         Relationships: []
       }
+      shared_snag_views: {
+        Row: {
+          id: string
+          short_code: string
+          viewed_at: string
+          viewer_ip_hash: string
+        }
+        Insert: {
+          id?: string
+          short_code: string
+          viewed_at?: string
+          viewer_ip_hash: string
+        }
+        Update: {
+          id?: string
+          short_code?: string
+          viewed_at?: string
+          viewer_ip_hash?: string
+        }
+        Relationships: []
+      }
       shared_snags: {
         Row: {
           analysis_id: string | null
@@ -2225,10 +2246,6 @@ export type Database = {
         Returns: undefined
       }
       increment_retros_used: { Args: { p_user_id: string }; Returns: number }
-      increment_share_view: {
-        Args: { p_short_code: string }
-        Returns: undefined
-      }
       increment_team_snag_usage: {
         Args: { p_team_id: string; p_type: string }
         Returns: undefined
@@ -2247,6 +2264,10 @@ export type Database = {
         Returns: boolean
       }
       is_trial_expired: { Args: { p_user_id: string }; Returns: boolean }
+      is_valid_storage_path: {
+        Args: { p_path: string; p_user_id: string }
+        Returns: boolean
+      }
       search_team_decisions: {
         Args: {
           p_categories?: string[]
