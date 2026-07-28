@@ -28,6 +28,7 @@ import SolutionMarketingPage from "./pages/SolutionMarketingPage";
 import SolutionOperationsPage from "./pages/SolutionOperationsPage";
 import Analyze from "./pages/Analyze";
 import Login from "./pages/Login";
+import OAuthConsent from "./pages/OAuthConsent";
 import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
