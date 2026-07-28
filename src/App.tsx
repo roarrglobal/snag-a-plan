@@ -133,6 +133,7 @@ const App = () => {
               <Route path="/help/:sectionId" element={<HelpSectionPage />} />
               <Route path="/help/:sectionId/:articleId" element={<HelpArticlePage />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
