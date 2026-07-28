@@ -1,0 +1,162 @@
+{
+  "version": 1,
+  "sdk_version": "0.24.0",
+  "path": "/functions/v1/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://xlmvxgotcodvmnlpobxh.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "nerve-mcp",
+      "version": "0.1.0",
+      "title": "Nerve"
+    },
+    "tools": [
+      {
+        "name": "get_workspace_summary",
+        "title": "Get workspace summary",
+        "description": "Summarise the signed-in user's Nerve workspace: profile, module access, and counts of Scan sessions, ZERO beliefs and SNAG gates.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_snag_gates",
+        "title": "List SNAG gates",
+        "description": "List the signed-in user's SNAG decision gates, optionally filtered by status (active, fired, cleared, expired).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "active",
+                "fired",
+                "cleared",
+                "expired"
+              ],
+              "description": "Filter by gate status."
+            },
+            "limit": {
+              "type": "integer",
+              "description": "Max rows to return (default 20, max 100)."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "update_snag_gate_status",
+        "title": "Update SNAG gate status",
+        "description": "Update the status of one of the signed-in user's SNAG gates to active, fired, cleared or expired.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "gate_id": {
+              "type": "string",
+              "description": "The gate (analysis) id."
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "active",
+                "fired",
+                "cleared",
+                "expired"
+              ],
+              "description": "New gate status."
+            }
+          },
+          "required": [
+            "gate_id",
+            "status"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_scan_sessions",
+        "title": "List Scan sessions",
+        "description": "List the signed-in user's Scan diagnostic sessions, including pillar scores and the binding constraint.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "in_progress",
+                "completed"
+              ],
+              "description": "Filter by session status."
+            },
+            "limit": {
+              "type": "integer",
+              "description": "Max rows to return (default 10, max 50)."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_zero_beliefs",
+        "title": "List ZERO belief examinations",
+        "description": "List the signed-in user's ZERO belief examination sessions with their classification and verdict.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "scan_session_id": {
+              "type": "string",
+              "description": "Only beliefs linked to this Scan session."
+            },
+            "limit": {
+              "type": "integer",
+              "description": "Max rows to return (default 20, max 100)."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}

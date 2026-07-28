@@ -28,6 +28,7 @@ import SolutionMarketingPage from "./pages/SolutionMarketingPage";
 import SolutionOperationsPage from "./pages/SolutionOperationsPage";
 import Analyze from "./pages/Analyze";
 import Login from "./pages/Login";
+import OAuthConsent from "./pages/OAuthConsent";
 import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
@@ -133,6 +134,7 @@ const App = () => {
               <Route path="/help/:sectionId" element={<HelpSectionPage />} />
               <Route path="/help/:sectionId/:articleId" element={<HelpArticlePage />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
